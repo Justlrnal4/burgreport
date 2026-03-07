@@ -20,15 +20,18 @@ def get_client() -> Optional[Client]:
     global _client
     if _client is None:
         url = os.getenv("SUPABASE_URL")
+        # Try keys in order: service JWT, anon JWT. Skip sb_secret_ (unsupported by SDK 2.x)
         key = os.getenv("SUPABASE_SERVICE_KEY")
-        # sb_secret_ keys require newer SDK; fall back to anon JWT key
-        if not key or key.startswith("sb_secret_"):
-            key = os.getenv("SUPABASE_ANON_KEY")
+        if not key or key.startswith("sb_secret_") or key.startswith("sb_publishable_"):
+            key = os.getenv("SUPABASE_ANON_KEY") or os.getenv("SUPABASE_KEY")
         if url and key:
-            _client = create_client(url, key)
-            logger.info("Supabase client initialized")
+            try:
+                _client = create_client(url, key)
+                logger.info("Supabase client initialized")
+            except Exception as e:
+                logger.error(f"Supabase client init failed: {e}")
         else:
-            logger.warning("Supabase env vars not set — running without DB cache")
+            logger.warning(f"Supabase env vars not set — running without DB cache (url={'set' if url else 'missing'}, key={'set' if key else 'missing'})")
     return _client
 
 
