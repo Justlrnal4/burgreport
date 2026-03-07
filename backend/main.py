@@ -37,6 +37,7 @@ app.add_middleware(
     allow_origins=[
         "https://burgreport.com",
         "https://www.burgreport.com",
+        "https://grand-cru-guide.lovable.app",
         "http://localhost:5173",
         "http://localhost:3000",
     ],
