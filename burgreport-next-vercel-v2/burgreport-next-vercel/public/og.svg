@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="BurgReport Grand Cru Burgundy Pricing Intelligence">
+  <rect width="1200" height="630" fill="#0F0A0B"/>
+  <circle cx="1040" cy="80" r="280" fill="#9B2D4A" opacity="0.22"/>
+  <circle cx="190" cy="120" r="260" fill="#C9986A" opacity="0.12"/>
+  <g transform="translate(540 72)" stroke="#C9986A" stroke-linejoin="round">
+    <path d="M18 8h124l-28 130c-6 29-25 46-52 46s-46-17-52-46L18 8Z" fill="none" stroke-width="10"/>
+    <path d="M34 112c19-29 60-36 96 0-14 36-36 52-48 52s-34-16-48-52Z" fill="#9B2D4A" stroke-width="6"/>
+    <path d="M80 184v48" stroke-width="10" stroke-linecap="round"/>
+    <path d="M80 232 122 268 80 304 38 268Z" fill="#9B2D4A" stroke-width="8"/>
+  </g>
+  <text x="600" y="395" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="92" font-weight="900" letter-spacing="-3">
+    <tspan fill="#9B2D4A">BURG</tspan><tspan fill="#F5F0F0">REPORT</tspan>
+  </text>
+  <line x1="515" x2="685" y1="420" y2="420" stroke="#C9986A" opacity="0.55" stroke-width="2"/>
+  <text x="600" y="488" text-anchor="middle" fill="#9B2D4A" font-family="JetBrains Mono, monospace" font-size="25" letter-spacing="9">BURGUNDY GRAND CRU INTELLIGENCE</text>
+  <text x="600" y="548" text-anchor="middle" fill="#B7A8AF" font-family="Inter, Arial, sans-serif" font-size="28">Pricing context for all 33 Grand Cru climats</text>
+</svg>
