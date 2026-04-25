@@ -33,7 +33,13 @@ Do not hide panels to make the page look cleaner. Missing data is part of the tr
 
 ## Backend Contract Target
 
-See `docs/API_CONTRACT_LOCK_LIST.md` for the desired future `DataField<T>` response shape. The backend should become the source of truth for field-level statuses over time.
+See `docs/API_CONTRACT_LOCK_LIST.md` for the desired future `DataField<T>` response shape. The backend now returns an additive `truth` block on `/api/search`; keep older fields until the frontend migrates cleanly.
+
+Root backend docs also describe the server-side status model and Supabase schema foundation:
+
+- `docs/DATA_STATUS_MODEL.md`
+- `docs/SUPABASE_SCHEMA.md`
+- `supabase/migrations/20260425000000_truth_model_foundation.sql`
 
 ## Guardrails
 

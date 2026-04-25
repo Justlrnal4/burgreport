@@ -72,6 +72,10 @@ Expected response:
 }
 ```
 
+## Current backend transition
+
+The FastAPI backend now preserves the legacy `/api/search` response and adds an additive `truth` block with field-level status metadata. Frontend clients can migrate toward `truth` without breaking the older `climat`, `price`, `vintage`, and `meta` blocks.
+
 ## Target field-status contract
 
 The backend should eventually become the source of truth for field-level status metadata. The current frontend safely maps the existing backend response into:

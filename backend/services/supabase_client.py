@@ -56,7 +56,7 @@ def get_all_grand_crus() -> list:
     if not db:
         return []
     try:
-        result = db.table("grand_crus").select("id, name, aoc, village, cote, color").order("name").execute()
+        result = db.table("grand_crus").select("id, slug, name, aoc, village, cote, color, grape, size_ha, is_monopole").order("name").execute()
         return result.data or []
     except Exception as e:
         logger.error(f"get_all_grand_crus error: {e}")
@@ -110,7 +110,7 @@ def set_cached_price(grand_cru_id: str, vintage: Optional[int], price_data: dict
             "critic_name": price_data.get("critic_name"),
             "drinking_window": price_data.get("drinking_window"),
             "sources": price_data.get("sources", []),
-            "confidence": price_data.get("confidence", "low"),
+            "confidence": price_data.get("confidence", "unavailable"),
             "data_source": price_data.get("source", "unknown"),
             "fetched_at": datetime.now(timezone.utc).isoformat(),
         }

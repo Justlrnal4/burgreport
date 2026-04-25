@@ -9,6 +9,7 @@ import time
 import logging
 from typing import Optional
 import httpx
+from services import reference_data
 
 logger = logging.getLogger("burgreport.airtable")
 
@@ -94,6 +95,10 @@ def get_climat_data(name: str) -> Optional[dict]:
         if data:
             return data
 
+    reference = reference_data.find_climat(name)
+    if reference:
+        return reference
+
     # Fallback: exact match in seed data
     for key, val in SEED_CLIMATS.items():
         if key.lower() == name.lower() or name.lower() in key.lower():
@@ -116,7 +121,7 @@ def get_all_climats() -> list:
             _cache_expires = time.time() + 3600
             return records
 
-    return list(SEED_CLIMATS.values())
+    return reference_data.list_climats()
 
 
 # ─── Airtable API calls ───────────────────────────────────────────────────────
