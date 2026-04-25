@@ -65,6 +65,7 @@ BR_ENABLE_ESTIMATED_MARKET_DATA=false
 - `/grand-cru` — index of all 33 Grand Cru climats
 - `/grand-cru/[slug]` — static Grand Cru guide pages
 - `/vintages` — vintage guide starter
+- `/methodology` — data-quality and frontend trust model
 - `/api/wines` — Next proxy for backend wines endpoint
 - `/api/search` — Next proxy for backend search endpoint
 - `/api/health` — backend health proxy
@@ -85,3 +86,4 @@ BR_ENABLE_ESTIMATED_MARKET_DATA=false
 - `/api/search` should return `price.history` and `comparables`, or explicitly return `null`.
 - Merchant/source data should be a typed array, not fabricated in the frontend.
 - Vintage data should separate Côte de Nuits and Côte de Beaune.
+- Future backend responses should expose field-level `DataField<T>` status metadata for live, estimated, reference, unavailable, and example states.

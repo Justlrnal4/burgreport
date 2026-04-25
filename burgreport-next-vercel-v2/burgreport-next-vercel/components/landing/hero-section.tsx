@@ -14,22 +14,22 @@ const sampleChecks = [
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden px-4 pb-10 pt-10 sm:px-6 lg:px-8 lg:pb-12 lg:pt-14">
-      <div className="absolute inset-x-0 top-0 -z-10 h-72 bg-gradient-to-b from-wine/16 via-elevated/18 to-transparent" />
+    <section className="relative overflow-hidden px-4 pb-8 pt-8 sm:px-6 lg:px-8 lg:pb-10 lg:pt-10">
+      <div className="absolute inset-x-0 top-0 -z-10 h-56 bg-gradient-to-b from-wine/10 via-elevated/10 to-transparent" />
       <div className="mx-auto max-w-7xl">
-        <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+        <div className="grid gap-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
           <div>
             <BurgReportHeroLockup />
-            <div className="mt-8">
-              <h1 className="max-w-4xl text-balance text-5xl font-black leading-none tracking-normal text-cream sm:text-6xl lg:text-7xl">
+            <div className="mt-6">
+              <h1 className="max-w-4xl text-balance text-4xl font-black leading-none tracking-normal text-cream sm:text-5xl lg:text-6xl">
                 Know what every <span className="text-gold">Grand Cru</span> is worth.
               </h1>
-              <p className="mt-6 max-w-3xl text-base leading-7 text-muted sm:text-lg">
+              <p className="mt-5 max-w-3xl text-base leading-7 text-muted">
                 Search Burgundy&apos;s 33 Grand Cru climats and review pricing context, vintage signal, and data-quality status before you buy, sell, or benchmark a bottle.
               </p>
             </div>
 
-            <div className="mt-8 max-w-4xl">
+            <div className="mt-6 max-w-4xl">
               <HeroSearch wines={GRAND_CRUS} variant="hero" />
               <div className="mt-4 flex flex-wrap gap-2">
                 {sampleChecks.map((item) => (
@@ -48,7 +48,7 @@ export function HeroSection() {
           <ExamplePreviewCard />
         </div>
 
-        <div className="mt-8 grid gap-4 lg:grid-cols-[1fr_0.9fr]">
+        <div className="mt-6 grid gap-3 lg:grid-cols-[1fr_0.9fr]">
           <DataQualityLegend />
           <ExampleSearchTable />
         </div>
@@ -74,11 +74,12 @@ function ExamplePreviewCard() {
       <div className="mt-5 grid gap-3 sm:grid-cols-2">
         <PreviewMetric label="Price status" value="Unavailable" status="unavailable" />
         <PreviewMetric label="Vintage signal" value="Reference" status="reference" />
-        <PreviewMetric label="Price range" value="Unavailable" status="unavailable" />
         <PreviewMetric label="Merchant coverage" value="Unavailable" status="unavailable" />
-        <PreviewMetric label="Comparable wines" value="Unavailable" status="unavailable" />
-        <PreviewMetric label="Context type" value="Example Preview" status="example" />
+        <PreviewMetric label="Context type" value="Example" status="example" />
       </div>
+      <p className="mt-4 text-xs leading-5 text-muted">
+        This preview shows the result structure. Live values appear only when returned by the backend.
+      </p>
     </aside>
   );
 }

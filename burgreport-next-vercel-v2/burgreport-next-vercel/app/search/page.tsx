@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
-import { HeroSearch } from '@/components/search/hero-search';
 import { SearchEmptyState } from '@/components/search/search-empty-state';
-import { ResultCard } from '@/components/result/result-card';
 import { DataQualityLegend } from '@/components/data-quality/DataQualityLegend';
+import { SearchCommandBar } from '@/components/search-terminal/SearchCommandBar';
+import { SearchTerminal } from '@/components/search-terminal/SearchTerminal';
 import { GRAND_CRUS } from '@/lib/data/grand-crus';
 import { searchWine } from '@/lib/api/burgreport';
 
@@ -35,13 +35,14 @@ export async function generateMetadata({ searchParams }: SearchPageProps): Promi
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const params = await searchParams;
   const wine = params.wine?.trim() || '';
-  const vintage = params.vintage?.trim() || '';
+  const vintageParam = params.vintage?.trim() || '';
+  const vintage = /^\d{4}$/.test(vintageParam) ? vintageParam : '';
   const payload = wine ? await searchWine(wine, vintage) : null;
 
   return (
-    <section className="px-4 py-10 sm:px-6 lg:px-8">
+    <section className="px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <div className="grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
+        <div className="grid gap-5 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
           <div>
             <p className="font-mono text-xs uppercase tracking-normal text-gold">Pricing terminal</p>
             <h1 className="mt-3 text-4xl font-semibold tracking-normal text-cream md:text-5xl">Grand Cru pricing intelligence.</h1>
@@ -51,23 +52,25 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           </p>
         </div>
 
-        <div className="mt-7">
-          <HeroSearch wines={GRAND_CRUS} initialWine={wine} initialVintage={vintage} />
+        <div className="mt-6">
+          <SearchCommandBar wines={GRAND_CRUS} initialWine={wine} initialVintage={vintage} canShare={Boolean(payload?.result)} />
         </div>
 
-        <div className="mt-5">
+        <div className="mt-4">
           <DataQualityLegend />
         </div>
 
-        <div className="mt-7">
+        <div className="mt-5">
           {!wine && <SearchEmptyState />}
           {payload?.error && (
-            <div className="mb-6 rounded-3xl border border-danger/35 bg-danger/10 p-5 text-sm text-danger">
-              <p className="font-semibold">{payload.error.message}</p>
-              {payload.error.detail && <p className="mt-1 text-danger/80">{payload.error.detail}</p>}
+            <div className="mb-5 rounded-2xl border border-danger/35 bg-danger/10 p-5 text-sm text-danger">
+              <p className="font-semibold">{payload.error.status === 'backend-error' ? 'Backend unavailable' : payload.error.message}</p>
+              <p className="mt-1 text-danger/80">
+                {payload.error.status === 'backend-error' ? 'Reference data may still be available. Try again in a moment.' : payload.error.detail}
+              </p>
             </div>
           )}
-          {payload?.result && <ResultCard result={payload.result} />}
+          {payload?.result && <SearchTerminal result={payload.result} />}
         </div>
       </div>
     </section>

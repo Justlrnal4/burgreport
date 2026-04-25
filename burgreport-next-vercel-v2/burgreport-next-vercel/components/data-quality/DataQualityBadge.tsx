@@ -1,14 +1,13 @@
 import { cn } from '@/lib/utils/cn';
-
-export type DataQualityStatus = 'live' | 'estimated' | 'reference' | 'unavailable' | 'example';
+import type { DataStatus } from '@/types/burgreport';
 
 interface DataQualityBadgeProps {
-  status: DataQualityStatus;
+  status: DataStatus;
   compact?: boolean;
   className?: string;
 }
 
-const STATUS_META: Record<DataQualityStatus, { label: string; title: string; className: string }> = {
+const STATUS_META: Record<DataStatus, { label: string; title: string; className: string }> = {
   live: {
     label: 'Live',
     title: 'Live: returned by backend',

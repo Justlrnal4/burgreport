@@ -1,8 +1,8 @@
-import type { DataSource } from '@/types/burgreport';
-import { DataQualityBadge, type DataQualityStatus } from '@/components/data-quality/DataQualityBadge';
+import type { DataSource, DataStatus } from '@/types/burgreport';
+import { DataQualityBadge } from '@/components/data-quality/DataQualityBadge';
 
 export function DataSourceBadge({ source }: { source: DataSource }) {
-  const statuses: Record<DataSource, DataQualityStatus> = {
+  const statuses: Record<DataSource, DataStatus> = {
     live: 'live',
     estimated: 'estimated',
     sample: 'example',

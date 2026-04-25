@@ -2,6 +2,16 @@ export type WineColor = 'Red' | 'White';
 export type Grape = 'Pinot Noir' | 'Chardonnay';
 export type Cote = 'Côte de Nuits' | 'Côte de Beaune';
 export type DataSource = 'live' | 'estimated' | 'sample' | 'missing';
+export type DataStatus = 'live' | 'estimated' | 'reference' | 'unavailable' | 'example';
+
+export interface DataField<T> {
+  value: T | null;
+  status: DataStatus;
+  label?: string;
+  source?: string;
+  asOf?: string;
+  note?: string;
+}
 
 export interface GrandCru {
   id: number;

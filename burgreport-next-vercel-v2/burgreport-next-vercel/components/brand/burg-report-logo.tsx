@@ -60,17 +60,16 @@ export function BurgReportLogo({ compact = false, className }: LogoProps) {
 
 export function BurgReportHeroLockup() {
   return (
-    <div className="flex flex-col items-center text-center">
+    <div className="inline-flex items-center gap-3">
       <span className="text-gold drop-shadow-[0_0_20px_rgba(201,152,106,0.14)]">
-        <BurgReportIcon className="h-16 w-14 sm:h-20 sm:w-16" />
+        <BurgReportIcon className="h-10 w-8 sm:h-12 sm:w-10" />
       </span>
-      <div className="mt-2">
+      <div>
         <BurgReportWordmark size="hero" />
+        <p className="mt-1 font-mono text-[10px] uppercase tracking-normal text-wine sm:text-xs">
+          Burgundy Grand Cru Intelligence
+        </p>
       </div>
-      <div className="mt-3 h-px w-28 bg-gradient-to-r from-transparent via-gold/55 to-transparent" />
-      <p className="mt-3 font-mono text-[11px] uppercase tracking-normal text-wine sm:text-xs">
-        Burgundy Grand Cru Intelligence
-      </p>
     </div>
   );
 }

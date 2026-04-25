@@ -1,26 +1,27 @@
-import { DataQualityBadge, type DataQualityStatus } from '@/components/data-quality/DataQualityBadge';
+import { DataQualityBadge } from '@/components/data-quality/DataQualityBadge';
+import type { DataStatus } from '@/types/burgreport';
 
-const ITEMS: Array<{ status: DataQualityStatus; text: string }> = [
-  { status: 'live', text: 'returned by backend' },
-  { status: 'estimated', text: 'calculated or inferred and labeled' },
-  { status: 'reference', text: 'static climat/vintage context' },
-  { status: 'unavailable', text: 'not enough source data' },
-  { status: 'example', text: 'illustrative preview only' }
+const ITEMS: Array<{ status: DataStatus; label: string; text: string }> = [
+  { status: 'live', label: 'Live', text: 'returned by backend' },
+  { status: 'estimated', label: 'Estimated', text: 'calculated and labeled' },
+  { status: 'reference', label: 'Reference', text: 'static context' },
+  { status: 'unavailable', label: 'Unavailable', text: 'not enough data' },
+  { status: 'example', label: 'Example', text: 'illustrative only' }
 ];
 
 export function DataQualityLegend() {
   return (
-    <section aria-labelledby="data-quality-legend" className="rounded-2xl border border-line bg-surface/80 p-4 shadow-card">
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+    <section aria-labelledby="data-quality-legend" className="rounded-xl border border-line bg-surface/80 p-3 shadow-card">
+      <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
         <div>
           <p id="data-quality-legend" className="font-mono text-xs uppercase tracking-normal text-gold">Data quality legend</p>
-          <p className="mt-1 text-sm text-muted">BurgReport separates source status before you act on price.</p>
+          <p className="mt-1 text-xs text-muted">Source status stays visible before price claims.</p>
         </div>
-        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="flex flex-wrap gap-2">
           {ITEMS.map((item) => (
-            <div key={item.status} className="rounded-xl border border-line bg-ink px-3 py-2">
+            <div key={item.status} className="inline-flex items-center gap-2 rounded-full border border-line bg-ink px-2.5 py-1.5">
               <DataQualityBadge status={item.status} compact />
-              <p className="mt-1 text-xs leading-5 text-muted">{item.text}</p>
+              <span className="text-xs text-muted"><span className="sr-only">{item.label}: </span>{item.text}</span>
             </div>
           ))}
         </div>
