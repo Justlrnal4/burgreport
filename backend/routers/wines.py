@@ -6,7 +6,7 @@ GET /api/wines/{name} — get details for a specific climat
 
 import logging
 from fastapi import APIRouter, HTTPException
-from services import airtable, claude_search, supabase_client
+from services import airtable, openai_search, supabase_client
 
 logger = logging.getLogger("burgreport.wines")
 
@@ -41,7 +41,7 @@ async def get_wine(wine_name: str):
     if not climat:
         climat = airtable.get_climat_data(wine_name)
     if not climat:
-        climat = claude_search.get_wine_info(wine_name)
+        climat = openai_search.get_wine_info(wine_name)
     if not climat or not climat.get("name"):
         raise HTTPException(status_code=404, detail=f"Wine '{wine_name}' not found")
     return climat

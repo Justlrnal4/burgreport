@@ -1,6 +1,6 @@
 """
 Nightly Price Refresh Script
-Refreshes prices for all 33 Grand Crus × top vintages via Claude web search.
+Refreshes prices for all 33 Grand Crus × top vintages via OpenAI web search.
 Run nightly at 3 AM via Railway cron: 0 3 * * *
 """
 
@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from services import claude_search, supabase_client
+from services import openai_search, supabase_client
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("burgreport.refresh")
@@ -42,7 +42,7 @@ def refresh_all():
     for wine in GRAND_CRUS:
         for vintage in TOP_VINTAGES:
             try:
-                price_data = claude_search.get_wine_price(wine, vintage)
+                price_data = openai_search.get_wine_price(wine, vintage)
                 if price_data.get("avg_price_usd"):
                     supabase_client.set_cached_price(wine.lower().replace(" ", "_"), vintage, price_data)
                     success += 1

@@ -4,7 +4,7 @@ GET /api/search?wine_name=La+Tâche&vintage=2019
 
 The core endpoint. Orchestrates:
 1. Cache check (Supabase)
-2. Claude web search (live pricing)
+2. OpenAI web search (candidate pricing)
 3. Airtable climat data
 4. Vintage rating lookup
 5. Merge + return
@@ -15,7 +15,7 @@ import logging
 from typing import Optional
 from fastapi import APIRouter, HTTPException, Query
 
-from services import claude_search, supabase_client, airtable
+from services import openai_search, supabase_client, airtable
 
 logger = logging.getLogger("burgreport.search")
 
@@ -40,8 +40,8 @@ async def search_wine(
     if price_data:
         cache_hit = True
     else:
-        # ── 3. Fetch live price via Claude web search ─────────────────────
-        price_data = claude_search.get_wine_price(wine_name, vintage)
+        # ── 3. Fetch candidate price context via OpenAI web search ────────
+        price_data = openai_search.get_wine_price(wine_name, vintage)
 
         # ── 4. Cache the result ───────────────────────────────────────────
         if price_data.get("avg_price_usd"):
@@ -50,9 +50,9 @@ async def search_wine(
     # ── 5. Get climat data from Airtable ────────────────────────────────────
     climat = airtable.get_climat_data(wine_name)
     if not climat:
-        # Fall back to Claude for climat info
-        logger.info(f"No Airtable data for {wine_name}, using Claude fallback")
-        climat = claude_search.get_wine_info(wine_name)
+        # Fall back to OpenAI for climat info
+        logger.info(f"No Airtable data for {wine_name}, using OpenAI fallback")
+        climat = openai_search.get_wine_info(wine_name)
 
     # ── 6. Get vintage rating ────────────────────────────────────────────────
     cote = (climat or {}).get("cote", "Côte de Nuits")
@@ -86,7 +86,7 @@ async def search_wine(
             "critic_name": price_data.get("critic_name"),
             "drinking_window": price_data.get("drinking_window"),
             "sources": price_data.get("sources", []),
-            "confidence": price_data.get("confidence", "low"),
+            "confidence": price_data.get("confidence", "unavailable"),
             "notes": price_data.get("notes"),
         },
         "vintage": vintage_rating,

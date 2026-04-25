@@ -1,7 +1,7 @@
 # Updated for Railway cache bust - March 2026
 annotated-doc==0.0.4
 annotated-types==0.7.0
-anthropic==0.34.2
+openai==2.32.0
 anyio==4.12.1
 certifi==2026.2.25
 click==8.3.1
