@@ -39,7 +39,7 @@ async def search_wine(
     if not climat:
         raise HTTPException(status_code=404, detail=f"Wine '{wine_name}' not found")
 
-    grand_cru_id = (grand_cru or {}).get("id") or climat.get("slug") or climat.get("id") or wine_name.lower().replace(" ", "_")
+    grand_cru_id = supabase_client.canonical_grand_cru_id(wine_name, grand_cru or climat)
 
     # ── 2. Check Supabase price cache ────────────────────────────────────────
     cache_hit = False
@@ -108,7 +108,7 @@ async def search_wine(
             "vintage": vintage,
             "response_ms": elapsed_ms,
             "cache_hit": cache_hit,
-            "data_source": price_data.get("source", "unknown"),
+            "data_source": _price_source(price_data),
         },
         "truth": truth,
     }
@@ -125,6 +125,10 @@ def _live_market_field(value, source: str | None, note: str = "Not enough mercha
     return _data_field(live_field(value, source=source))
 
 
+def _price_source(price_data: dict) -> str:
+    return price_data.get("source") or price_data.get("data_source") or "unknown"
+
+
 def build_truth_response(
     query: str,
     vintage: Optional[int],
@@ -134,7 +138,7 @@ def build_truth_response(
     response_ms: int,
     cache_hit: bool,
 ) -> dict:
-    price_source = price_data.get("source")
+    price_source = _price_source(price_data)
     no_market_note = "Not enough merchant observations returned."
     no_coverage_note = "Merchant coverage requires normalized backend observations."
 

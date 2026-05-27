@@ -47,6 +47,16 @@ class TruthModelFoundationTests(unittest.TestCase):
         self.assertEqual(reference_data.find_climat("Batard Montrachet")["name"], "Bâtard-Montrachet")
         self.assertEqual(reference_data.find_climat("Clos de Beze")["name"], "Chambertin-Clos de Bèze")
 
+    def test_canonical_grand_cru_id_matches_reference_slugs(self):
+        from services import supabase_client
+
+        self.assertEqual(supabase_client.canonical_grand_cru_id("La Tache"), "la-tache")
+        self.assertEqual(supabase_client.canonical_grand_cru_id("Bâtard Montrachet"), "batard-montrachet")
+        self.assertEqual(
+            supabase_client.canonical_grand_cru_id("ignored", {"id": "la_tache", "slug": "La Tâche"}),
+            "la-tache",
+        )
+
     @patch("routers.search.supabase_client.log_search")
     @patch("routers.search.supabase_client.get_vintage_rating")
     @patch("routers.search.openai_search.get_wine_price")
@@ -112,6 +122,41 @@ class TruthModelFoundationTests(unittest.TestCase):
         self.assertEqual(truth["price"]["history"]["status"], "unavailable")
         self.assertEqual(truth["price"]["merchantCoverage"]["status"], "unavailable")
         self.assertEqual(truth["comparables"]["status"], "unavailable")
+
+    @patch("routers.search.supabase_client.log_search")
+    @patch("routers.search.supabase_client.get_vintage_rating")
+    @patch("routers.search.openai_search.get_wine_price")
+    @patch("routers.search.supabase_client.get_cached_price")
+    @patch("routers.search.supabase_client.get_grand_cru")
+    def test_search_cache_hit_preserves_data_source(
+        self,
+        get_grand_cru,
+        get_cached_price,
+        get_wine_price,
+        get_vintage_rating,
+        log_search,
+    ):
+        get_grand_cru.return_value = {"id": "la-tache", "slug": "la-tache", "name": "La Tâche"}
+        get_cached_price.return_value = {
+            "avg_price_usd": 1000,
+            "min_price_usd": 900,
+            "max_price_usd": 1100,
+            "sources": [],
+            "confidence": "unavailable",
+            "data_source": "wine_searcher",
+        }
+        get_vintage_rating.return_value = None
+
+        client = TestClient(main.app)
+        response = client.get("/api/search", params={"wine_name": "La Tache", "vintage": 2019})
+        body = response.json()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(body["meta"]["data_source"], "wine_searcher")
+        self.assertEqual(body["truth"]["price"]["average"]["source"], "wine_searcher")
+        self.assertTrue(body["meta"]["cache_hit"])
+        get_wine_price.assert_not_called()
+        log_search.assert_called_once()
 
     @patch("routers.search.openai_search.get_wine_price")
     @patch("routers.search.supabase_client.get_cached_price")

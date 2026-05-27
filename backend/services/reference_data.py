@@ -36,6 +36,7 @@ GRAND_CRUS = [
     {"id": 31, "slug": "criots-batard-montrachet", "name": "Criots-Bâtard-Montrachet", "village": "Chassagne-Montrachet", "cote": "Côte de Beaune", "color": "White", "grape": "Chardonnay", "size_ha": 1.6, "is_monopole": False, "aliases": ["Criots Batard Montrachet"]},
     {"id": 32, "slug": "montrachet", "name": "Montrachet", "village": "Puligny/Chassagne", "cote": "Côte de Beaune", "color": "White", "grape": "Chardonnay", "size_ha": 8.0, "is_monopole": False, "aliases": []},
     {"id": 33, "slug": "musigny-blanc", "name": "Musigny Blanc", "village": "Chambolle-Musigny", "cote": "Côte de Nuits", "color": "White", "grape": "Chardonnay", "size_ha": 0.65, "is_monopole": False, "aliases": ["Musigny White"]},
+    {"id": 34, "slug": "blagny", "name": "Blagny", "village": "Blagny", "cote": "Côte de Beaune", "color": "Red", "grape": "Pinot Noir", "size_ha": 4.3, "is_monopole": False, "aliases": []},
 ]
 
 

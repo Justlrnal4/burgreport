@@ -14,22 +14,8 @@ from openai import OpenAI
 
 logger = logging.getLogger("burgreport.openai_search")
 
-OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-5")
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")
 _client: Optional[OpenAI] = None
-
-GRAND_CRUS = [
-    "Chambertin", "Chambertin-Clos de Bèze", "Chapelle-Chambertin",
-    "Charmes-Chambertin", "Griotte-Chambertin", "Latricières-Chambertin",
-    "Mazis-Chambertin", "Mazoyères-Chambertin", "Ruchottes-Chambertin",
-    "Bonnes-Mares", "Clos de la Roche", "Clos Saint-Denis",
-    "Clos des Lambrays", "Clos de Tart", "Clos Vougeot",
-    "Échézeaux", "Grands Échézeaux", "La Romanée",
-    "La Romanée-Conti", "La Tâche", "Richebourg",
-    "Romanée-Saint-Vivant", "La Grande Rue", "Corton",
-    "Corton-Charlemagne", "Charlemagne", "Musigny",
-    "Montrachet", "Bâtard-Montrachet", "Bienvenues-Bâtard-Montrachet",
-    "Chevalier-Montrachet", "Criots-Bâtard-Montrachet", "Blagny",
-]
 
 
 PRICE_SCHEMA = {
@@ -133,7 +119,7 @@ def _get_client() -> Optional[OpenAI]:
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         return None
-    _client = OpenAI(api_key=api_key)
+    _client = OpenAI(api_key=api_key, timeout=30.0)
     return _client
 
 
@@ -172,15 +158,17 @@ Always return "unavailable" for confidence until BurgReport has a verified scori
 Return JSON matching the requested schema."""
 
     try:
-        response = openai_client.responses.create(
+        kwargs = dict(
             model=OPENAI_MODEL,
-            reasoning={"effort": "low"},
             tools=[{"type": "web_search"}],
             tool_choice="auto",
             text={"format": PRICE_SCHEMA},
             max_output_tokens=700,
             input=prompt,
         )
+        if OPENAI_MODEL.startswith(("gpt-5", "o1", "o3", "o4")):
+            kwargs["reasoning"] = {"effort": "low"}
+        response = openai_client.responses.create(**kwargs)
         data = _parse_json_output(response.output_text)
         if not data:
             return _empty_price("openai_parse_error")
@@ -208,13 +196,15 @@ If you are not certain about a field, return null or an empty list. Do not inven
 sizes, or classifications."""
 
     try:
-        response = openai_client.responses.create(
+        kwargs = dict(
             model=OPENAI_MODEL,
-            reasoning={"effort": "low"},
             text={"format": INFO_SCHEMA},
             max_output_tokens=700,
             input=prompt,
         )
+        if OPENAI_MODEL.startswith(("gpt-5", "o1", "o3", "o4")):
+            kwargs["reasoning"] = {"effort": "low"}
+        response = openai_client.responses.create(**kwargs)
         data = _parse_json_output(response.output_text)
         return data or {"name": wine_name, "description": None}
     except Exception as exc:

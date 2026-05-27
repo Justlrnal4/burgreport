@@ -130,7 +130,8 @@ def _fetch_from_airtable(name: str) -> Optional[dict]:
     try:
         url = f"https://api.airtable.com/v0/{BASE_ID}/{GRAND_CRUS_TABLE}"
         headers = {"Authorization": f"Bearer {AIRTABLE_TOKEN}"}
-        params = {"filterByFormula": f"SEARCH('{name}', {{Name}})"}
+        safe_name = name.replace("\\", "\\\\").replace("'", "\\'")
+        params = {"filterByFormula": f"SEARCH('{safe_name}', {{Name}})"}
         with httpx.Client(timeout=10) as client:
             r = client.get(url, headers=headers, params=params)
             r.raise_for_status()

@@ -9,6 +9,8 @@ from typing import Optional
 from datetime import datetime, timezone, timedelta
 from supabase import create_client, Client
 
+from services import reference_data
+
 logger = logging.getLogger("burgreport.supabase")
 
 CACHE_TTL_HOURS = 24
@@ -37,14 +39,44 @@ def get_client() -> Optional[Client]:
 
 # ─── Grand Crus ───────────────────────────────────────────────────────────────
 
+def canonical_grand_cru_id(name_or_id: str, climat: Optional[dict] = None) -> str:
+    """Return the slug-style cache key used by search, refresh, and Supabase."""
+    if climat:
+        for key in ("slug", "id"):
+            value = climat.get(key)
+            if isinstance(value, str) and value.strip():
+                return reference_data.normalize_name(value)
+
+    reference = reference_data.find_climat(name_or_id)
+    if reference:
+        return reference["slug"]
+
+    return reference_data.normalize_name(name_or_id)
+
+
 def get_grand_cru(name: str) -> Optional[dict]:
-    """Fuzzy search for a grand cru by name."""
+    """Look up a grand cru by canonical slug/id before falling back to a guarded fuzzy match."""
     db = get_client()
     if not db:
         return None
     try:
-        result = db.table("grand_crus").select("*").ilike("name", f"%{name}%").limit(1).execute()
-        return result.data[0] if result.data else None
+        normalized = canonical_grand_cru_id(name)
+        for column in ("slug", "id"):
+            result = db.table("grand_crus").select("*").eq(column, normalized).limit(1).execute()
+            if result.data:
+                return result.data[0]
+
+        result = db.table("grand_crus").select("*").ilike("name", name.strip()).limit(1).execute()
+        if result.data:
+            return result.data[0]
+
+        if len(name.strip()) >= 4:
+            result = db.table("grand_crus").select("*").ilike("name", f"%{name.strip()}%").limit(2).execute()
+            if len(result.data or []) == 1:
+                return result.data[0]
+            if result.data:
+                logger.warning(f"Ambiguous grand cru lookup for {name!r}; ignoring fuzzy DB match")
+        return None
     except Exception as e:
         logger.error(f"get_grand_cru error: {e}")
         return None
@@ -85,7 +117,9 @@ def get_cached_price(grand_cru_id: str, vintage: Optional[int]) -> Optional[dict
         result = query.limit(1).execute()
         if result.data:
             logger.info(f"Cache HIT: {grand_cru_id} {vintage}")
-            return result.data[0]
+            row = result.data[0]
+            row["source"] = row.get("source") or row.get("data_source") or "unknown"
+            return row
         logger.info(f"Cache MISS: {grand_cru_id} {vintage}")
         return None
     except Exception as e:
@@ -111,7 +145,7 @@ def set_cached_price(grand_cru_id: str, vintage: Optional[int], price_data: dict
             "drinking_window": price_data.get("drinking_window"),
             "sources": price_data.get("sources", []),
             "confidence": price_data.get("confidence", "unavailable"),
-            "data_source": price_data.get("source", "unknown"),
+            "data_source": price_data.get("source") or price_data.get("data_source") or "unknown",
             "fetched_at": datetime.now(timezone.utc).isoformat(),
         }
         db.table("wine_prices").upsert(row, on_conflict="grand_cru_id,vintage").execute()

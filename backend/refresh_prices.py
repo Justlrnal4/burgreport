@@ -11,22 +11,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from services import openai_search, supabase_client
+from services.reference_data import GRAND_CRUS as _GRAND_CRU_DEFS
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("burgreport.refresh")
 
-GRAND_CRUS = [
-    "Chambertin", "Chambertin-Clos de Bèze", "Chapelle-Chambertin",
-    "Charmes-Chambertin", "Griotte-Chambertin", "Latricières-Chambertin",
-    "Mazis-Chambertin", "Clos de la Roche", "Clos Saint-Denis",
-    "Clos des Lambrays", "Clos de Tart", "Clos Vougeot",
-    "Échézeaux", "Grands Échézeaux", "La Romanée",
-    "La Romanée-Conti", "La Tâche", "Richebourg",
-    "Romanée-Saint-Vivant", "La Grande Rue", "Corton",
-    "Corton-Charlemagne", "Musigny", "Montrachet",
-    "Bâtard-Montrachet", "Chevalier-Montrachet",
-    "Bonnes-Mares",
-]
+GRAND_CRUS = [item["name"] for item in _GRAND_CRU_DEFS]
 
 TOP_VINTAGES = [2015, 2018, 2019, 2020, 2022]
 
@@ -44,7 +34,8 @@ def refresh_all():
             try:
                 price_data = openai_search.get_wine_price(wine, vintage)
                 if price_data.get("avg_price_usd"):
-                    supabase_client.set_cached_price(wine.lower().replace(" ", "_"), vintage, price_data)
+                    grand_cru_id = supabase_client.canonical_grand_cru_id(wine)
+                    supabase_client.set_cached_price(grand_cru_id, vintage, price_data)
                     success += 1
                     logger.info(f"✓ {wine} {vintage} — ${price_data['avg_price_usd']}")
                 else:
