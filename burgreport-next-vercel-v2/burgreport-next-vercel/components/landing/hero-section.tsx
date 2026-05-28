@@ -25,7 +25,7 @@ export function HeroSection() {
                 Know what every <span className="text-gold">Grand Cru</span> is worth.
               </h1>
               <p className="mt-5 max-w-3xl text-base leading-7 text-muted">
-                Search Burgundy&apos;s 33 Grand Cru climats and review pricing context, vintage signal, and data-quality status before you buy, sell, or benchmark a bottle.
+                Search Burgundy&apos;s 34 Grand Cru climats and review pricing context, vintage signal, and data-quality status before you buy, sell, or benchmark a bottle.
               </p>
             </div>
 

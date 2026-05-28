@@ -5,7 +5,7 @@ import { GRAND_CRUS } from '@/lib/data/grand-crus';
 
 export const metadata: Metadata = {
   title: 'Grand Cru Guide',
-  description: 'Browse all 33 Burgundy Grand Cru climats in the BurgReport reference guide.',
+  description: 'Browse all 34 Burgundy Grand Cru climats in the BurgReport reference guide.',
   alternates: { canonical: '/grand-cru' }
 };
 
@@ -19,7 +19,7 @@ export default function GrandCruIndexPage() {
               <p className="font-mono text-xs uppercase tracking-normal text-gold">Grand Cru Guide</p>
               <DataQualityBadge status="reference" compact />
             </div>
-            <h1 className="mt-3 text-4xl font-semibold tracking-normal text-cream md:text-5xl">All 33 Grand Cru climats.</h1>
+            <h1 className="mt-3 text-4xl font-semibold tracking-normal text-cream md:text-5xl">All 34 Grand Cru climats.</h1>
           </div>
           <p className="text-sm leading-6 text-muted">
             A filterable reference database for climat facts: name, village, Côte, color, grape, size, monopole status, and search actions.

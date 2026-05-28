@@ -62,7 +62,7 @@ BR_ENABLE_ESTIMATED_MARKET_DATA=false
 
 - `/` — landing page
 - `/search` — wine search and result page
-- `/grand-cru` — index of all 33 Grand Cru climats
+- `/grand-cru` — index of all 34 Grand Cru climats
 - `/grand-cru/[slug]` — static Grand Cru guide pages
 - `/vintages` — vintage guide starter
 - `/methodology` — data-quality and frontend trust model

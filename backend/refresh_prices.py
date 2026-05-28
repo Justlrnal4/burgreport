@@ -1,6 +1,6 @@
 """
 Nightly Price Refresh Script
-Refreshes prices for all 33 Grand Crus × top vintages via OpenAI web search.
+Refreshes prices for all 34 Grand Crus × top vintages via OpenAI web search.
 Run nightly at 3 AM via Railway cron: 0 3 * * *
 """
 

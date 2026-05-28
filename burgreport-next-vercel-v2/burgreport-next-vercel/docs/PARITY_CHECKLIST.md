@@ -21,7 +21,7 @@
 
 ## Guide pages
 
-- [ ] `/grand-cru` lists all 33 climats.
+- [ ] `/grand-cru` lists all 34 climats.
 - [ ] `/grand-cru/la-tache` renders.
 - [ ] `/grand-cru/montrachet` renders.
 - [ ] JSON-LD exists on detail pages.

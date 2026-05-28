@@ -1,6 +1,6 @@
 """
 Wines Router
-GET /api/wines — list all 33 Grand Crus (for autocomplete/search UI)
+GET /api/wines — list all 34 Grand Crus (for autocomplete/search UI)
 GET /api/wines/{name} — get details for a specific climat
 """
 
@@ -15,7 +15,7 @@ router = APIRouter(prefix="/api/wines", tags=["wines"])
 
 @router.get("")
 async def list_wines():
-    """Return all 33 Grand Crus — used for search autocomplete."""
+    """Return all 34 Grand Crus — used for search autocomplete."""
     # Try Supabase first, fall back to Airtable/seed data
     wines = supabase_client.get_all_grand_crus()
     if not wines:

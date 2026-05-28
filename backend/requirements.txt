@@ -2,7 +2,7 @@
 annotated-doc==0.0.4
 annotated-types==0.7.0
 openai==2.32.0
-anyio==4.12.1
+anyio==4.6.2.post1
 certifi==2026.2.25
 click==8.3.1
 colorama==0.4.6

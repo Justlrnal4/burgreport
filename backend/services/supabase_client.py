@@ -83,7 +83,7 @@ def get_grand_cru(name: str) -> Optional[dict]:
 
 
 def get_all_grand_crus() -> list:
-    """Return all 33 grand crus for autocomplete."""
+    """Return all 34 grand crus for autocomplete."""
     db = get_client()
     if not db:
         return []

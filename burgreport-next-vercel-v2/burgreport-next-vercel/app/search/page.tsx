@@ -16,7 +16,7 @@ export async function generateMetadata({ searchParams }: SearchPageProps): Promi
   if (!wine) {
     return {
       title: 'Search Grand Cru Burgundy',
-      description: 'Search all 33 Burgundy Grand Cru climats with transparent pricing context and data-quality status.',
+      description: 'Search all 34 Burgundy Grand Cru climats with transparent pricing context and data-quality status.',
       alternates: { canonical: '/search' },
       robots: { index: true, follow: true }
     };

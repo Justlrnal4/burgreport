@@ -2,10 +2,9 @@ import os
 import unittest
 from unittest.mock import patch
 
-from fastapi.testclient import TestClient
-
 import main
 from services import openai_search, reference_data
+from tests.asgi_client import get
 
 
 class TruthModelFoundationTests(unittest.TestCase):
@@ -21,8 +20,7 @@ class TruthModelFoundationTests(unittest.TestCase):
         openai_search._client = None
 
     def test_health_returns_200(self):
-        client = TestClient(main.app)
-        response = client.get("/health")
+        response = get(main.app, "/health")
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["status"], "ok")
@@ -38,8 +36,8 @@ class TruthModelFoundationTests(unittest.TestCase):
 
         self.assertEqual(origins, ["http://localhost:3000", "https://burgreport.com"])
 
-    def test_reference_dataset_has_33_climats_and_required_aliases(self):
-        self.assertEqual(len(reference_data.list_climats()), 33)
+    def test_reference_dataset_has_34_climats_and_required_aliases(self):
+        self.assertEqual(len(reference_data.list_climats()), 34)
         self.assertEqual(reference_data.find_climat("La Tache")["name"], "La Tâche")
         self.assertEqual(reference_data.find_climat("Romanee Conti")["name"], "Romanée-Conti")
         self.assertEqual(reference_data.find_climat("Romanee-Conti")["name"], "Romanée-Conti")
@@ -75,8 +73,7 @@ class TruthModelFoundationTests(unittest.TestCase):
         get_wine_price.return_value = openai_search._empty_price("openai_missing_key")
         get_vintage_rating.return_value = None
 
-        client = TestClient(main.app)
-        response = client.get("/api/search", params={"wine_name": "La Tache", "vintage": 2019})
+        response = get(main.app, "/api/search", params={"wine_name": "La Tache", "vintage": 2019})
         body = response.json()
 
         self.assertEqual(response.status_code, 200)
@@ -111,8 +108,7 @@ class TruthModelFoundationTests(unittest.TestCase):
         get_wine_price.return_value = openai_search._empty_price("openai_missing_key")
         get_vintage_rating.return_value = None
 
-        client = TestClient(main.app)
-        response = client.get("/api/search", params={"wine_name": "Montrachet"})
+        response = get(main.app, "/api/search", params={"wine_name": "Montrachet"})
         truth = response.json()["truth"]
 
         self.assertEqual(response.status_code, 200)
@@ -147,8 +143,7 @@ class TruthModelFoundationTests(unittest.TestCase):
         }
         get_vintage_rating.return_value = None
 
-        client = TestClient(main.app)
-        response = client.get("/api/search", params={"wine_name": "La Tache", "vintage": 2019})
+        response = get(main.app, "/api/search", params={"wine_name": "La Tache", "vintage": 2019})
         body = response.json()
 
         self.assertEqual(response.status_code, 200)
@@ -165,8 +160,7 @@ class TruthModelFoundationTests(unittest.TestCase):
         get_grand_cru.return_value = None
         get_cached_price.return_value = None
 
-        client = TestClient(main.app)
-        response = client.get("/api/search", params={"wine_name": "Not A Grand Cru"})
+        response = get(main.app, "/api/search", params={"wine_name": "Not A Grand Cru"})
 
         self.assertEqual(response.status_code, 404)
         get_wine_price.assert_not_called()
@@ -175,12 +169,11 @@ class TruthModelFoundationTests(unittest.TestCase):
     def test_wines_endpoint_uses_local_reference_data_without_supabase(self, get_all_grand_crus):
         get_all_grand_crus.return_value = []
 
-        client = TestClient(main.app)
-        response = client.get("/api/wines")
+        response = get(main.app, "/api/wines")
         body = response.json()
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(body["count"], 33)
+        self.assertEqual(body["count"], 34)
         self.assertTrue(any(wine["name"] == "La Tâche" for wine in body["wines"]))
 
 

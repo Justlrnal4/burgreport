@@ -119,7 +119,20 @@ def _data_field(field):
 
 
 def _live_market_field(value, source: str | None, note: str = "Not enough merchant observations returned."):
-    unavailable_sources = {"openai_missing_key", "openai_parse_error", "openai_error", "error", "unknown"}
+    unavailable_sources = {
+        "openai_missing_key",
+        "openai_auth_error",
+        "openai_bad_request",
+        "openai_rate_limit",
+        "openai_timeout",
+        "openai_connection_error",
+        "openai_parse_error",
+        "openai_error",
+        "error",
+        "unknown",
+    }
+    if source and source.startswith("openai_status_"):
+        return _data_field(unavailable_field(note=note))
     if value is None or source in unavailable_sources:
         return _data_field(unavailable_field(note=note))
     return _data_field(live_field(value, source=source))

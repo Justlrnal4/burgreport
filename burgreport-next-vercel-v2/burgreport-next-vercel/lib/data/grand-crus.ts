@@ -36,7 +36,8 @@ export const GRAND_CRUS: GrandCru[] = [
   { id: 30, slug: 'chevalier-montrachet', name: 'Chevalier-Montrachet', village: 'Puligny-Montrachet', cote: 'Côte de Beaune', color: 'White', grape: 'Chardonnay', sizeHa: 7.3, isMonopole: false, summary: WHITE_DEFAULT, keyProducers: ['Leflaive', 'Bouchard Père & Fils', 'Domaine d’Auvenay'] },
   { id: 31, slug: 'criots-batard-montrachet', name: 'Criots-Bâtard-Montrachet', village: 'Chassagne-Montrachet', cote: 'Côte de Beaune', color: 'White', grape: 'Chardonnay', sizeHa: 1.6, isMonopole: false, summary: WHITE_DEFAULT, keyProducers: ['Ramonet', 'Blain-Gagnard', 'Hubert Lamy'] },
   { id: 32, slug: 'montrachet', name: 'Montrachet', village: 'Puligny/Chassagne', cote: 'Côte de Beaune', color: 'White', grape: 'Chardonnay', sizeHa: 8.0, isMonopole: false, summary: 'The benchmark white Burgundy Grand Cru with exceptional scarcity and producer-driven global pricing.', keyProducers: ['Domaine de la Romanée-Conti', 'Ramonet', 'Leflaive'] },
-  { id: 33, slug: 'musigny-blanc', name: 'Musigny Blanc', village: 'Chambolle-Musigny', cote: 'Côte de Nuits', color: 'White', grape: 'Chardonnay', sizeHa: 0.65, isMonopole: false, summary: 'Rare white expression associated with Musigny; treat as a special case in data and pricing workflows.', keyProducers: ['Comte Georges de Vogüé'] }
+  { id: 33, slug: 'musigny-blanc', name: 'Musigny Blanc', village: 'Chambolle-Musigny', cote: 'Côte de Nuits', color: 'White', grape: 'Chardonnay', sizeHa: 0.65, isMonopole: false, summary: 'Rare white expression associated with Musigny; treat as a special case in data and pricing workflows.', keyProducers: ['Comte Georges de Vogüé'] },
+  { id: 34, slug: 'blagny', name: 'Blagny', village: 'Puligny-Montrachet', cote: 'Côte de Beaune', color: 'Red', grape: 'Pinot Noir', sizeHa: 4.0, isMonopole: false, summary: 'Côte de Beaune Grand Cru red Burgundy with a smaller market footprint and strong producer sensitivity.', keyProducers: ['Louis Jadot', 'Faiveley', 'Domaine de la Vougeraie'] }
 ];
 
 export function getGrandCruBySlug(slug: string): GrandCru | undefined {
@@ -77,5 +78,6 @@ const GRAND_CRU_ALIASES: Record<string, string> = {
   'la-romanee-conti': 'romanee-conti',
   'romanee-conti': 'romanee-conti',
   'musigny-white': 'musigny-blanc',
-  'musigny-blanc': 'musigny-blanc'
+  'musigny-blanc': 'musigny-blanc',
+  blagny: 'blagny'
 };

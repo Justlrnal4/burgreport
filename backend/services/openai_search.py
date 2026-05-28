@@ -10,11 +10,11 @@ import logging
 import os
 from typing import Optional
 
-from openai import OpenAI
+from openai import APIConnectionError, APIStatusError, APITimeoutError, AuthenticationError, BadRequestError, OpenAI, RateLimitError
 
 logger = logging.getLogger("burgreport.openai_search")
 
-OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
 _client: Optional[OpenAI] = None
 
 
@@ -132,6 +132,22 @@ def _parse_json_output(output_text: str) -> Optional[dict]:
     return data if isinstance(data, dict) else None
 
 
+def _openai_error_source(exc: Exception) -> str:
+    if isinstance(exc, AuthenticationError):
+        return "openai_auth_error"
+    if isinstance(exc, BadRequestError):
+        return "openai_bad_request"
+    if isinstance(exc, RateLimitError):
+        return "openai_rate_limit"
+    if isinstance(exc, APITimeoutError):
+        return "openai_timeout"
+    if isinstance(exc, APIConnectionError):
+        return "openai_connection_error"
+    if isinstance(exc, APIStatusError):
+        return f"openai_status_{exc.status_code}"
+    return "openai_error"
+
+
 def get_wine_price(wine_name: str, vintage: Optional[int] = None) -> dict:
     """
     Use OpenAI with web search to look for retail price context.
@@ -176,8 +192,9 @@ Return JSON matching the requested schema."""
         logger.info(f"OpenAI price lookup complete: {wine_name} avg=${data.get('avg_price_usd')}")
         return data
     except Exception as exc:
-        logger.error(f"OpenAI price lookup error for {wine_name}: {exc}")
-        return _empty_price()
+        source = _openai_error_source(exc)
+        logger.error(f"OpenAI price lookup error for {wine_name}: {source}: {exc}")
+        return _empty_price(source)
 
 
 def get_wine_info(wine_name: str) -> dict:
@@ -208,5 +225,6 @@ sizes, or classifications."""
         data = _parse_json_output(response.output_text)
         return data or {"name": wine_name, "description": None}
     except Exception as exc:
-        logger.error(f"OpenAI wine info error for {wine_name}: {exc}")
+        source = _openai_error_source(exc)
+        logger.error(f"OpenAI wine info error for {wine_name}: {source}: {exc}")
         return {"name": wine_name, "description": None}

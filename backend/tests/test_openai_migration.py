@@ -2,9 +2,8 @@ import os
 import unittest
 from unittest.mock import patch
 
-from fastapi.testclient import TestClient
-
 from services import openai_search
+from tests.asgi_client import get
 import main
 
 
@@ -61,8 +60,7 @@ class OpenAIMigrationTests(unittest.TestCase):
         get_wine_info.return_value = {"name": "La Tache"}
         get_vintage_rating.return_value = None
 
-        client = TestClient(main.app)
-        response = client.get("/api/search", params={"wine_name": "La Tache", "vintage": 2019})
+        response = get(main.app, "/api/search", params={"wine_name": "La Tache", "vintage": 2019})
         body = response.json()
 
         self.assertEqual(response.status_code, 200)
