@@ -7,3 +7,4 @@ __pycache__/
 *.zip
 supabase/.temp/
 .refresh_prices_state.json
+docs/portfolio/
