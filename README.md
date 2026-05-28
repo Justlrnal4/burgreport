@@ -34,7 +34,7 @@ burgreport-next-vercel-v2/  LEGACY — see CLAIM.md inside; not part of canonica
 
 See [`backend/README.md`](backend/README.md) for backend setup, environment variables, and local validation steps.
 
-Required env vars on Railway: `OPENAI_API_KEY`, `SUPABASE_URL`, `SUPABASE_KEY`, `AIRTABLE_TOKEN`, `AIRTABLE_BASE_ID`. `OPENAI_MODEL` defaults to `gpt-4.1-mini`; set to `gpt-5` or an o-series model to enable reasoning effort.
+Required env vars on Railway: `OPENAI_API_KEY`, `SUPABASE_URL`, `SUPABASE_KEY`, `AIRTABLE_TOKEN`, `AIRTABLE_BASE_ID`. `OPENAI_SEARCH_MODEL` defaults to `gpt-4.1-mini` for price lookups using web search. `OPENAI_MODEL` defaults to `gpt-4.1-mini` for non-search fallback context; set either to `gpt-5` or an o-series model to enable reasoning effort.
 
 ## Status
 

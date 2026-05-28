@@ -15,6 +15,7 @@ from openai import APIConnectionError, APIStatusError, APITimeoutError, Authenti
 logger = logging.getLogger("burgreport.openai_search")
 
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
+OPENAI_SEARCH_MODEL = os.getenv("OPENAI_SEARCH_MODEL", "gpt-4.1-mini")
 _client: Optional[OpenAI] = None
 
 
@@ -175,14 +176,14 @@ Return JSON matching the requested schema."""
 
     try:
         kwargs = dict(
-            model=OPENAI_MODEL,
+            model=OPENAI_SEARCH_MODEL,
             tools=[{"type": "web_search"}],
             tool_choice="auto",
             text={"format": PRICE_SCHEMA},
             max_output_tokens=700,
             input=prompt,
         )
-        if OPENAI_MODEL.startswith(("gpt-5", "o1", "o3", "o4")):
+        if OPENAI_SEARCH_MODEL.startswith(("gpt-5", "o1", "o3", "o4")):
             kwargs["reasoning"] = {"effort": "low"}
         response = openai_client.responses.create(**kwargs)
         data = _parse_json_output(response.output_text)

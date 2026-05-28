@@ -7,7 +7,8 @@ FastAPI backend for BurgReport pricing and Grand Cru reference endpoints.
 The backend now uses OpenAI for the fallback search/provider layer:
 
 - `OPENAI_API_KEY` is required for OpenAI-backed lookups.
-- `OPENAI_MODEL` defaults to `gpt-4.1-mini` when unset. Set to `gpt-5` (or any `o1`/`o3`/`o4`-series model) to enable reasoning effort; the code only passes `reasoning` for reasoning-capable model families.
+- `OPENAI_SEARCH_MODEL` defaults to `gpt-4.1-mini` for price lookups that use web search.
+- `OPENAI_MODEL` defaults to `gpt-4.1-mini` for non-search fallback context. Set either model variable to `gpt-5` (or any `o1`/`o3`/`o4`-series model) to enable reasoning effort; the code only passes `reasoning` for reasoning-capable model families.
 - The OpenAI service is loaded lazily so the API can still boot without a key.
 - Missing, unparseable, or unsupported OpenAI values return `null`/empty fields rather than synthetic market data.
 
