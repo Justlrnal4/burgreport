@@ -38,7 +38,7 @@ Required env vars on Railway: `OPENAI_API_KEY`, `SUPABASE_URL`, `SUPABASE_KEY`, 
 
 ## Status
 
-Live with caveats — see `docs/PRODUCTION_READINESS_CHECKLIST.md` for the current blockers. The most recent audit + remediation pass is at `~/Documents/Justin Main/09 - Decisions & Change Log/audit-2026-05-26T095327Z-burgreport/` (private to the maintainer).
+Live with caveats — see `docs/PRODUCTION_READINESS_CHECKLIST.md` for the current blockers. Recent audit + remediation findings are tracked in private maintainer notes.
 
 ## Truth model
 
