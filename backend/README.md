@@ -36,11 +36,38 @@ The backend is the source of truth for field-level data status. New normalized r
 
 `/api/search` currently preserves the legacy response shape and adds a `truth` block with field-level status metadata.
 
+## Scheduled Supabase refresh
+
+`refresh_prices.py` can run from a mini PC and update Supabase directly. The live Railway API reads `wine_prices` before calling OpenAI, so cached rows from the mini PC are immediately available to `/api/search`.
+
+For a free-tier search setup, use Tavily:
+
+```bash
+cd /home/justin/projects/burgreport/backend
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+cp .env.example .env
+```
+
+Fill `.env` with `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`, and `TAVILY_API_KEY`. Then test one small batch:
+
+```bash
+.venv/bin/python refresh_prices.py --provider tavily --limit 3 --sleep-seconds 2 --state-file /home/justin/.cache/burgreport/refresh-state.json
+```
+
+Recommended cron for roughly 900 Tavily searches/month:
+
+```cron
+15 */8 * * * cd /home/justin/projects/burgreport/backend && ./.venv/bin/python refresh_prices.py --provider tavily --limit 10 --sleep-seconds 2 --state-file /home/justin/.cache/burgreport/refresh-state.json >> /home/justin/.cache/burgreport/refresh.log 2>&1
+```
+
+The worker only upserts successful direct USD price parses. Failed searches, rate limits, or no-price snippets do not overwrite existing cached prices.
+
 ## Local validation
 
 From `backend/`:
 
 ```bash
-python -m py_compile main.py routers/search.py routers/wines.py routers/vintages.py services/openai_search.py services/supabase_client.py services/airtable.py services/reference_data.py models/common.py refresh_prices.py
+python -m py_compile main.py routers/search.py routers/wines.py routers/vintages.py services/openai_search.py services/tavily_search.py services/supabase_client.py services/airtable.py services/reference_data.py models/common.py refresh_prices.py
 python -m unittest discover -s tests -v
 ```
