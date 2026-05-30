@@ -190,6 +190,14 @@ Return JSON matching the requested schema."""
         if not data:
             return _empty_price("openai_parse_error")
         data["source"] = "openai_web_search"
+        # A $0 (or negative) market price is never real — a "searched but found no
+        # number" result. Coerce to null so it reads as unavailable everywhere
+        # (legacy block, truth block, and the cache-write guard) instead of an
+        # authoritative $0 quote.
+        for _k in ("avg_price_usd", "min_price_usd", "max_price_usd"):
+            _v = data.get(_k)
+            if _v is not None and _v <= 0:
+                data[_k] = None
         logger.info(f"OpenAI price lookup complete: {wine_name} avg=${data.get('avg_price_usd')}")
         return data
     except Exception as exc:

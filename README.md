@@ -8,7 +8,7 @@ Bloomberg Terminal for Burgundy — pricing intelligence for all 34 Grand Cru cl
 ## Stack
 
 - **Backend:** Python 3.12 + FastAPI on Railway. Routers for `search`, `wines`, `vintages`.
-- **AI layer:** OpenAI Responses API with the `web_search` tool. Pulls live pricing context from wine-searcher.com, vivino.com, wine.com, klwines.com, wineaccess.com, totalwine.com.
+- **AI layer:** OpenAI Responses API with the `web_search` tool, falling back to Tavily search over public merchant listings. Prices are unvalidated estimates parsed from public web pages — not a licensed feed and not a Wine-Searcher integration.
 - **Cache:** Supabase Postgres, 24-hour TTL on price snapshots.
 - **Content:** Airtable REST API for curated climat descriptions, producers, and pairings (1-hour in-memory cache).
 - **Frontend:** Lovable-managed React SPA on Cloudflare. Not tracked in this repo.
