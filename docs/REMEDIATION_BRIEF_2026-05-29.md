@@ -11,10 +11,10 @@ For the agent team. Goal: bring BurgReport to an honest, secure, portfolio-eligi
 - The portfolio demo screenshots (56 merchants, price history, 97pt scores, "Powered by Wine-Searcher") show data the backend does NOT produce. Demo/mock only.
 
 ## IN SCOPE (do these)
-1. **Security — deploy the RLS migration (TOP PRIORITY).**
-   - `supabase/migrations/20260527000000_rls_policies.sql` is written but NOT deployed. The live anon key currently has full read/write on all 14 public tables.
-   - Precondition: confirm `SUPABASE_SERVICE_KEY` is set on Railway FIRST (or cache upserts/log inserts start failing silently once RLS is on).
-   - Apply, then run the post-apply verification queries in the migration footer.
+1. **Security — finish enabling RLS on the last 2 tables (TOP PRIORITY).**
+   - RLS is now applied on 12 of 14 tables (migration applied as version `20260530022425`). The only remaining RLS gap is enabling it on `wine_prices` + `search_log`.
+   - This is blocked on setting the Railway `SUPABASE_SERVICE_KEY` (legacy service_role JWT) FIRST (or cache upserts/log inserts start failing silently once RLS is on for those two tables).
+   - Once the service key is set, enable RLS on `wine_prices` + `search_log`, then run the post-apply verification queries in the migration footer.
    - Done when: all 14 tables show `rowsecurity=true`; anon write is rejected; intended reads still work.
 2. **Remove the "Powered by Wine-Searcher" false claim.**
    - There is no Wine-Searcher API integration. Wine-Searcher is only one of Tavily's `DEFAULT_DOMAINS` (`tavily_search.py:22`).
