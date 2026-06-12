@@ -16,7 +16,7 @@ from typing import Optional
 from fastapi import APIRouter, HTTPException, Query
 
 from models.common import live_field, reference_field, unavailable_field
-from services import openai_search, supabase_client, airtable, reference_data
+from services import openai_search, supabase_client, airtable, data_quality, price_defense, price_quality, reference_data
 
 logger = logging.getLogger("burgreport.search")
 
@@ -46,6 +46,9 @@ async def search_wine(
     price_data = supabase_client.get_cached_price(grand_cru_id, vintage)
     if price_data:
         cache_hit = True
+        # Scrub legacy junk rows cached before the quality layer existed
+        # (fabricated merchant counts, self-referential sources, fake ranges).
+        price_data = price_quality.sanitize_price_data(price_data)
     else:
         # ── 3. Fetch candidate price context via OpenAI web search ────────
         price_data = openai_search.get_wine_price(wine_name, vintage)
@@ -71,6 +74,20 @@ async def search_wine(
         vintage_rating=vintage_rating,
         response_ms=elapsed_ms,
         cache_hit=cache_hit,
+    )
+
+    # Honest, factor-backed quality signal for the price (badge fuel for the UI).
+    quality = data_quality.assess_quality(price_data)
+    truth["quality"] = quality
+
+    # Sourced, copy-ready "defend this price" summary for sommeliers/retailers.
+    defense = price_defense.build_defense(
+        wine_name=wine_name,
+        vintage=vintage,
+        climat=climat,
+        price_data=price_data,
+        vintage_rating=vintage_rating,
+        quality=quality,
     )
 
     # ── 7. Build legacy-compatible response with additive truth block ────────
@@ -102,6 +119,7 @@ async def search_wine(
             "confidence": price_data.get("confidence", "unavailable"),
             "notes": price_data.get("notes"),
             "fetched_at": price_data.get("fetched_at"),
+            "data_quality": quality,
         },
         "vintage": vintage_rating,
         "meta": {
@@ -111,6 +129,7 @@ async def search_wine(
             "cache_hit": cache_hit,
             "data_source": _price_source(price_data),
         },
+        "defense": defense,
         "truth": truth,
     }
 
