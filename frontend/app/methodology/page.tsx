@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { DataQualityBadge } from '@/components/data-quality/DataQualityBadge';
+import { PageHeader } from '@/components/site/page-header';
+import { Reveal } from '@/components/motion/reveal';
 
 export const metadata: Metadata = {
   title: 'Methodology',
@@ -37,34 +39,36 @@ const rows = [
 
 export default function MethodologyPage() {
   return (
-    <section className="px-4 py-10 sm:px-6 lg:px-8">
+    <section className="px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-5xl">
-        <p className="font-mono text-xs uppercase tracking-normal text-gold">Methodology</p>
-        <h1 className="mt-3 text-4xl font-semibold tracking-normal text-cream md:text-5xl">Trust labels come before price claims.</h1>
-        <p className="mt-5 max-w-3xl text-sm leading-6 text-muted">
-          The backend is the source of truth for market data. The frontend does not fabricate price data, merchant quotes, confidence scores, source counts, or price history. Missing coverage is shown directly rather than hidden.
-        </p>
+        <PageHeader
+          eyebrow="Methodology"
+          title="Trust labels come before price claims."
+          description="The backend is the source of truth. The frontend never fabricates prices, merchant quotes, confidence scores, source counts, or history — missing coverage is shown directly, not hidden."
+        />
 
-        <div className="mt-8 grid gap-3">
-          {rows.map((row) => (
-            <article key={row.status} className="rounded-2xl border border-line bg-surface p-5">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                <div>
-                  <h2 className="text-xl font-semibold text-cream">{row.title}</h2>
-                  <p className="mt-2 text-sm leading-6 text-muted">{row.body}</p>
+        <div className="mt-10 grid gap-3">
+          {rows.map((row, idx) => (
+            <Reveal key={row.status} delay={Math.min(idx * 50, 200)}>
+              <article className="rounded-2xl border border-line bg-surface p-5">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <h2 className="text-xl font-semibold text-cream">{row.title}</h2>
+                    <p className="mt-2 text-sm leading-6 text-muted">{row.body}</p>
+                  </div>
+                  <DataQualityBadge status={row.status} />
                 </div>
-                <DataQualityBadge status={row.status} />
-              </div>
-            </article>
+              </article>
+            </Reveal>
           ))}
         </div>
 
-        <div className="mt-8 rounded-2xl border border-gold/25 bg-ink p-5">
+        <Reveal className="mt-8 block rounded-2xl border border-gold/25 bg-ink p-5">
           <h2 className="text-lg font-semibold text-cream">How this improves over time</h2>
           <p className="mt-2 text-sm leading-6 text-muted">
             As coverage improves, unavailable fields can become estimated fields without changing the trust model — and if we ever add a licensed feed, that data earns the reserved &ldquo;Live&rdquo; status, walled off from the web-sourced estimates. BurgReport labels each field by source status before making any pricing claim.
           </p>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

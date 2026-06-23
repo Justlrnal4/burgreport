@@ -3,6 +3,7 @@ import { SearchEmptyState } from '@/components/search/search-empty-state';
 import { NotFoundState } from '@/components/search/not-found-state';
 import { RecentSearches } from '@/components/search/recent-searches';
 import { DataQualityLegend } from '@/components/data-quality/DataQualityLegend';
+import { PageHeader } from '@/components/site/page-header';
 import { SearchCommandBar } from '@/components/search-terminal/SearchCommandBar';
 import { SearchTerminal } from '@/components/search-terminal/SearchTerminal';
 import { GRAND_CRUS } from '@/lib/data/grand-crus';
@@ -73,15 +74,11 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   return (
     <section className="px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <div className="grid gap-5 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
-          <div>
-            <p className="font-mono text-xs uppercase tracking-normal text-gold">Pricing terminal</p>
-            <h1 className="mt-3 text-4xl font-semibold tracking-normal text-cream md:text-5xl">Grand Cru pricing intelligence.</h1>
-          </div>
-          <p className="text-sm leading-6 text-muted lg:max-w-2xl">
-            Search params drive the result URL. Backend-returned values, static reference context, estimated fields, and unavailable fields stay visibly separated.
-          </p>
-        </div>
+        <PageHeader
+          eyebrow="Pricing terminal"
+          title="Grand Cru pricing intelligence."
+          aside="Paste a price and get a confidence-gated read on whether it's defensible. Estimated, reference, and unavailable fields stay visibly separated — never fabricated."
+        />
 
         <div className="mt-6">
           <SearchCommandBar wines={GRAND_CRUS} initialWine={wine} initialVintage={vintage} initialQuoted={quoted} canShare={Boolean(payload?.result)} />

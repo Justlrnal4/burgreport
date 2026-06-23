@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { GRAND_CRUS, getGrandCruBySlug, relatedGrandCrus } from '@/lib/data/grand-crus';
+import { Reveal } from '@/components/motion/reveal';
 import { absoluteUrl } from '@/lib/utils/seo';
 
 interface GrandCruPageProps {
@@ -55,10 +56,10 @@ export default async function GrandCruPage({ params }: GrandCruPageProps) {
     <section className="px-4 py-12 sm:px-6 lg:px-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="mx-auto max-w-7xl">
-        <div className="rounded-[2rem] border border-line bg-surface p-6 shadow-card md:p-10">
+        <Reveal className="block rounded-[2rem] border border-line bg-surface p-6 shadow-card md:p-10">
           <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className="font-mono text-xs uppercase tracking-[0.3em] text-gold">Grand Cru Guide</p>
+              <p className="eyebrow-rule font-mono text-[11px] uppercase tracking-[0.2em] text-gold">Grand Cru Guide</p>
               <h1 className="mt-4 text-5xl font-semibold tracking-tight text-cream md:text-7xl">{wine.name}</h1>
               <p className="mt-4 max-w-2xl text-base leading-7 text-muted">{wine.summary}</p>
             </div>
@@ -73,9 +74,9 @@ export default async function GrandCruPage({ params }: GrandCruPageProps) {
             <Fact label="Wine" value={`${wine.color} · ${wine.grape}`} />
             <Fact label="Size" value={`${wine.sizeHa} ha`} />
           </div>
-        </div>
+        </Reveal>
 
-        <div className="mt-8 grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
+        <Reveal className="mt-8 grid gap-6 lg:grid-cols-[0.8fr_1.2fr]" delay={80}>
           <section className="rounded-[2rem] border border-line bg-surface p-6 shadow-card">
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-gold">Producer reference</p>
             <div className="mt-5 grid gap-3">
@@ -99,7 +100,7 @@ export default async function GrandCruPage({ params }: GrandCruPageProps) {
               ))}
             </div>
           </section>
-        </div>
+        </Reveal>
       </div>
     </section>
   );
