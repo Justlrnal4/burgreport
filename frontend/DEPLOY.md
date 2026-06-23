@@ -34,11 +34,14 @@ npm run build && npm run typecheck   # both must pass before deploy
 
 ### Order of operations (important)
 
+> Full backend+frontend+DNS+rollback runbook: [`../docs/DEPLOY_RUNBOOK.md`](../docs/DEPLOY_RUNBOOK.md).
+
 1. **Deploy the BACKEND first.** The quality badge + defense panel only appear
-   once the backend serves `truth.quality` and `defense`. Those changes are in
-   the `burgreport` backend repo working tree, **not yet committed/deployed**.
-   Commit + push → Railway redeploys → the live API gains the fields. Until then
-   the frontend still works but those two pieces stay hidden (graceful).
+   once the backend serves `truth.quality` and `defense`. As of 2026-06-22 those
+   changes are **committed** on branch `feat/honesty-layer-and-next-frontend`
+   (`a253f32`) but **not yet deployed** to Railway. Push/merge → Railway redeploys
+   → the live API gains the fields. Until then the frontend still works but those
+   two pieces stay hidden (graceful).
 2. **Deploy this frontend to Vercel**, verify on the `*.vercel.app` URL.
 3. **CORS:** not required for the main search flow — this app fetches the backend
    **server-side** (server components, `lib/api` is `server-only`), so the browser
