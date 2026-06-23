@@ -15,6 +15,9 @@ export function SearchEmptyState() {
       <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-muted">
         Search a Grand Cru climat to inspect estimated, reference, and unavailable fields — each labeled by source.
       </p>
+      <p className="mx-auto mt-2 max-w-xl text-xs leading-5 text-hint">
+        Every result shows what we <span className="text-cream">don&apos;t</span> know too — &ldquo;unavailable&rdquo; fields and a confidence that&apos;s capped below authoritative are the point, not a bug.
+      </p>
       <div className="mt-6 flex flex-wrap justify-center gap-2">
         {examples.map((example) => (
           <Link key={`${example.name}-${example.vintage}`} href={`/search?wine=${encodeURIComponent(example.name)}&vintage=${example.vintage}`} className="rounded-full border border-line bg-ink px-4 py-2 text-sm text-cream transition hover:border-gold/50 hover:text-gold">

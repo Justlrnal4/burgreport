@@ -1,3 +1,4 @@
+import { CitePanel } from '@/components/search-terminal/CitePanel';
 import { ClimatReferencePanel } from '@/components/search-terminal/ClimatReferencePanel';
 import { ComparablesPanel } from '@/components/search-terminal/ComparablesPanel';
 import { MarketPricePanel } from '@/components/search-terminal/MarketPricePanel';
@@ -36,6 +37,8 @@ export function SearchTerminal({ result }: { result: SearchResult }) {
       </div>
 
       <PriceDefensePanel result={result} />
+
+      <CitePanel result={result} />
 
       <MethodologyDisclosure />
     </div>

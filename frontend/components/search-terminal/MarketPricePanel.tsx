@@ -1,5 +1,6 @@
 import { PanelShell } from '@/components/search-terminal/PanelShell';
 import { UnavailableState } from '@/components/search-terminal/UnavailableState';
+import { SourcingStrengthXray } from '@/components/search-terminal/SourcingStrengthXray';
 import { DataQualityBadge } from '@/components/data-quality/DataQualityBadge';
 import { ResultQualityBadge } from '@/components/data-quality/ResultQualityBadge';
 import { formatUsd } from '@/lib/utils/format';
@@ -17,13 +18,13 @@ export function MarketPricePanel({ result }: { result: SearchResult }) {
         <>
           <div className="font-mono text-5xl font-semibold tracking-normal text-gold">{formatUsd(result.avgUsd)}</div>
           {result.quality ? (
-            <div className="mt-3 flex flex-col gap-2">
+            <div className="mt-3">
               <ResultQualityBadge quality={result.quality} className="self-start" />
-              <p className="text-sm leading-6 text-muted">{result.quality.note}</p>
             </div>
           ) : (
-            <p className="mt-2 text-sm text-muted">Average retail returned by backend.</p>
+            <p className="mt-2 text-sm text-muted">Web-sourced estimate.</p>
           )}
+          <SourcingStrengthXray result={result} />
         </>
       ) : (
         <UnavailableState detail="Average, low, and high prices are unavailable unless the backend returns credible values for this query." />

@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import { SearchEmptyState } from '@/components/search/search-empty-state';
+import { NotFoundState } from '@/components/search/not-found-state';
 import { DataQualityLegend } from '@/components/data-quality/DataQualityLegend';
 import { SearchCommandBar } from '@/components/search-terminal/SearchCommandBar';
 import { SearchTerminal } from '@/components/search-terminal/SearchTerminal';
 import { GRAND_CRUS } from '@/lib/data/grand-crus';
 import { searchWine } from '@/lib/api/burgreport';
+import { absoluteUrl } from '@/lib/utils/seo';
 
 interface SearchPageProps {
   searchParams: Promise<{ wine?: string; vintage?: string; quoted?: string }>;
@@ -24,12 +26,38 @@ export async function generateMetadata({ searchParams }: SearchPageProps): Promi
 
   const vintageParam = params.vintage?.trim() || '';
   const vintage = /^\d{4}$/.test(vintageParam) ? ` ${vintageParam}` : '';
+
+  const ogQuery = new URLSearchParams({ wine });
+  if (/^\d{4}$/.test(vintageParam)) ogQuery.set('vintage', vintageParam);
+  const quotedParam = (params.quoted || '').replace(/[^0-9]/g, '').slice(0, 8);
+  if (quotedParam) ogQuery.set('quoted', quotedParam);
+  const ogImage = absoluteUrl(`/api/og?${ogQuery.toString()}`);
+  const title = `${wine}${vintage} — Price & Context`;
+  const description = `Pricing context for ${wine}${vintage}. Web-sourced estimates, reference context, and unavailable fields are clearly labeled — never fabricated.`;
+
   return {
-    title: `${wine}${vintage} — Price & Context`,
-    description: `Pricing context for ${wine}${vintage}. Backend-returned values, reference context, and unavailable fields are labeled.`,
+    title,
+    description,
     alternates: { canonical: '/search' },
-    robots: { index: false, follow: true }
+    robots: { index: false, follow: true },
+    openGraph: { title, description, images: [{ url: ogImage, width: 1200, height: 630, alt: `${wine}${vintage} — BurgReport defensibility card` }] },
+    twitter: { card: 'summary_large_image', title, description, images: [ogImage] }
   };
+}
+
+function suggestClimats(query: string) {
+  const normalize = (value: string) => value.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const tokens = normalize(query).split(/\s+/).filter((token) => token.length >= 2);
+  const scored = GRAND_CRUS.map((wine) => {
+    const haystack = normalize(`${wine.name} ${wine.village} ${wine.cote}`);
+    const score = tokens.reduce((total, token) => total + (haystack.includes(token) ? 1 : 0), 0);
+    return { wine, score };
+  })
+    .filter((entry) => entry.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 4)
+    .map((entry) => entry.wine);
+  return scored.length ? scored : GRAND_CRUS.slice(0, 4);
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
@@ -39,6 +67,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const vintage = /^\d{4}$/.test(vintageParam) ? vintageParam : '';
   const quoted = (params.quoted?.trim() || '').replace(/[^0-9]/g, '').slice(0, 8);
   const payload = wine ? await searchWine(wine, vintage, quoted) : null;
+  const isNotFound = payload?.error?.status === 'not-found';
 
   return (
     <section className="px-4 py-8 sm:px-6 lg:px-8">
@@ -63,7 +92,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
         <div className="mt-5">
           {!wine && <SearchEmptyState />}
-          {payload?.error && (
+          {isNotFound && <NotFoundState query={wine} suggestions={suggestClimats(wine)} />}
+          {payload?.error && !isNotFound && (
             <div className="mb-5 rounded-2xl border border-danger/35 bg-danger/10 p-5 text-sm text-danger">
               <p className="font-semibold">{payload.error.status === 'backend-error' ? 'Backend unavailable' : payload.error.message}</p>
               <p className="mt-1 text-danger/80">
