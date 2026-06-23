@@ -160,8 +160,9 @@ class SearchSanitizationIntegrationTests(unittest.TestCase):
         self.assertIsNone(body["price"]["max_usd"])
         self.assertIsNone(body["price"]["merchant_count"])
         self.assertEqual(body["price"]["sources"], [])
-        # Truth model: average stays live, the fake bounds become unavailable.
-        self.assertEqual(body["truth"]["price"]["average"]["status"], "live")
+        # Truth model: a web-sourced average is an ESTIMATE (never "live" —
+        # that status is reserved for a licensed feed); fake bounds → unavailable.
+        self.assertEqual(body["truth"]["price"]["average"]["status"], "estimated")
         self.assertEqual(body["truth"]["price"]["low"]["status"], "unavailable")
         self.assertEqual(body["truth"]["price"]["high"]["status"], "unavailable")
         get_wine_price.assert_not_called()

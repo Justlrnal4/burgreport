@@ -127,29 +127,79 @@ def get_cached_price(grand_cru_id: str, vintage: Optional[int]) -> Optional[dict
         return None
 
 
+def build_cache_row(grand_cru_id: str, vintage: Optional[int], price_data: dict, fetched_at: Optional[str] = None) -> dict:
+    """Build the wine_prices row. The honesty invariant lives HERE, in the data we
+    persist: BurgReport never produces critic data, so critic_score/critic_name are
+    forced to None (clearing any legacy/provider value) rather than written through.
+    Pure function — covered by the honesty-regression tests."""
+    return {
+        "grand_cru_id": grand_cru_id,
+        "vintage": vintage,
+        "avg_price_usd": price_data.get("avg_price_usd"),
+        "min_price_usd": price_data.get("min_price_usd"),
+        "max_price_usd": price_data.get("max_price_usd"),
+        "merchant_count": price_data.get("merchant_count"),
+        # NEVER persist critic data — we do not produce it. Forced null on every write.
+        "critic_score": None,
+        "critic_name": None,
+        "drinking_window": price_data.get("drinking_window"),
+        "sources": price_data.get("sources", []),
+        "confidence": price_data.get("confidence", "unavailable"),
+        "data_source": price_data.get("source") or price_data.get("data_source") or "unknown",
+        "fetched_at": fetched_at or datetime.now(timezone.utc).isoformat(),
+    }
+
+
+def build_history_row(grand_cru_id: str, vintage: Optional[int], price_data: dict, captured_at: Optional[str] = None) -> Optional[dict]:
+    """Build an immutable dated snapshot for the forward-accruing estimate trail.
+    Returns None when there is no usable price (we never record a non-price).
+    Carries each point's source count + confidence so a thin point reads as thin."""
+    avg = price_data.get("avg_price_usd")
+    if avg is None:
+        return None
+    return {
+        "grand_cru_id": grand_cru_id,
+        "vintage": vintage,
+        "avg_price_usd": avg,
+        "min_price_usd": price_data.get("min_price_usd"),
+        "max_price_usd": price_data.get("max_price_usd"),
+        "source_count": len(price_data.get("sources") or []),
+        "confidence": price_data.get("confidence", "unavailable"),
+        "data_source": price_data.get("source") or price_data.get("data_source") or "unknown",
+        "captured_at": captured_at or datetime.now(timezone.utc).isoformat(),
+    }
+
+
+def append_price_history(grand_cru_id: str, vintage: Optional[int], price_data: dict) -> bool:
+    """Append a dated snapshot to the forward-history trail (append-only).
+    Best-effort: if the price_history table does not exist yet (migration not
+    applied in this environment) this fails QUIETLY — it must never break a search."""
+    db = get_client()
+    if not db:
+        return False
+    row = build_history_row(grand_cru_id, vintage, price_data)
+    if row is None:
+        return False
+    try:
+        db.table("price_history").insert(row).execute()
+        return True
+    except Exception as e:
+        logger.debug(f"append_price_history skipped ({grand_cru_id} {vintage}): {e}")
+        return False
+
+
 def set_cached_price(grand_cru_id: str, vintage: Optional[int], price_data: dict) -> bool:
-    """Upsert price data into the cache table."""
+    """Upsert price data into the 24h cache AND append to the forward-history trail."""
     db = get_client()
     if not db:
         return False
     try:
-        row = {
-            "grand_cru_id": grand_cru_id,
-            "vintage": vintage,
-            "avg_price_usd": price_data.get("avg_price_usd"),
-            "min_price_usd": price_data.get("min_price_usd"),
-            "max_price_usd": price_data.get("max_price_usd"),
-            "merchant_count": price_data.get("merchant_count"),
-            "critic_score": price_data.get("critic_score"),
-            "critic_name": price_data.get("critic_name"),
-            "drinking_window": price_data.get("drinking_window"),
-            "sources": price_data.get("sources", []),
-            "confidence": price_data.get("confidence", "unavailable"),
-            "data_source": price_data.get("source") or price_data.get("data_source") or "unknown",
-            "fetched_at": datetime.now(timezone.utc).isoformat(),
-        }
+        row = build_cache_row(grand_cru_id, vintage, price_data)
         db.table("wine_prices").upsert(row, on_conflict="grand_cru_id,vintage").execute()
         logger.info(f"Cached price for {grand_cru_id} {vintage}")
+        # Forward-history is the cache-APPEND mechanic: never overwrites, so the
+        # estimate trail compounds over time. Best-effort, off the critical path.
+        append_price_history(grand_cru_id, vintage, price_data)
         return True
     except Exception as e:
         logger.error(f"set_cached_price error: {e}")
