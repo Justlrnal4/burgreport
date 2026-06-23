@@ -15,8 +15,8 @@ import logging
 from typing import Optional
 from fastapi import APIRouter, HTTPException, Query
 
-from models.common import live_field, reference_field, unavailable_field
-from services import openai_search, supabase_client, airtable, reference_data
+from models.common import estimated_field, reference_field, unavailable_field
+from services import openai_search, supabase_client, airtable, data_quality, price_defense, price_quality, reference_data, verdict as verdict_service
 
 logger = logging.getLogger("burgreport.search")
 
@@ -27,6 +27,7 @@ router = APIRouter(prefix="/api", tags=["search"])
 async def search_wine(
     wine_name: str = Query(..., description="Grand Cru name, e.g. 'La Tâche' or 'Chambertin'"),
     vintage: Optional[int] = Query(None, description="4-digit vintage year, e.g. 2019"),
+    quoted_price: Optional[float] = Query(None, gt=0, description="Optional USD price you were quoted, to compare against public listings"),
 ):
     start = time.time()
     logger.info(f"Search: '{wine_name}' vintage={vintage}")
@@ -46,6 +47,9 @@ async def search_wine(
     price_data = supabase_client.get_cached_price(grand_cru_id, vintage)
     if price_data:
         cache_hit = True
+        # Scrub legacy junk rows cached before the quality layer existed
+        # (fabricated merchant counts, self-referential sources, fake ranges).
+        price_data = price_quality.sanitize_price_data(price_data)
     else:
         # ── 3. Fetch candidate price context via OpenAI web search ────────
         price_data = openai_search.get_wine_price(wine_name, vintage)
@@ -71,6 +75,32 @@ async def search_wine(
         vintage_rating=vintage_rating,
         response_ms=elapsed_ms,
         cache_hit=cache_hit,
+    )
+
+    # Honest, factor-backed quality signal for the price (badge fuel for the UI).
+    quality = data_quality.assess_quality(price_data)
+    truth["quality"] = quality
+
+    # Sourced, copy-ready "defend this price" summary for sommeliers/retailers.
+    defense = price_defense.build_defense(
+        wine_name=wine_name,
+        vintage=vintage,
+        climat=climat,
+        price_data=price_data,
+        vintage_rating=vintage_rating,
+        quality=quality,
+    )
+
+    # The Defensibility Verdict: a straight, confidence-gated answer. Thin
+    # sourcing yields an honest "too thin to call", never a directional guess.
+    verdict = verdict_service.build_verdict(
+        wine_name=wine_name,
+        vintage=vintage,
+        climat=climat,
+        price_data=price_data,
+        vintage_rating=vintage_rating,
+        quality=quality,
+        quoted_price=quoted_price,
     )
 
     # ── 7. Build legacy-compatible response with additive truth block ────────
@@ -102,6 +132,7 @@ async def search_wine(
             "confidence": price_data.get("confidence", "unavailable"),
             "notes": price_data.get("notes"),
             "fetched_at": price_data.get("fetched_at"),
+            "data_quality": quality,
         },
         "vintage": vintage_rating,
         "meta": {
@@ -111,6 +142,8 @@ async def search_wine(
             "cache_hit": cache_hit,
             "data_source": _price_source(price_data),
         },
+        "defense": defense,
+        "verdict": verdict,
         "truth": truth,
     }
 
@@ -119,7 +152,10 @@ def _data_field(field):
     return field.model_dump()
 
 
-def _live_market_field(value, source: str | None, note: str = "Not enough merchant observations returned."):
+def _estimated_market_field(value, source: str | None, note: str = "Not enough merchant observations returned."):
+    """A web-sourced price is an ESTIMATE, never a 'live' authoritative figure.
+    The 'live' status is reserved for a future licensed/first-party feed."""
+    estimate_note = "Unvalidated estimate parsed from public merchant listings — verify with the merchant."
     unavailable_sources = {
         "openai_missing_key",
         "openai_auth_error",
@@ -136,7 +172,7 @@ def _live_market_field(value, source: str | None, note: str = "Not enough mercha
         return _data_field(unavailable_field(note=note))
     if value is None or source in unavailable_sources:
         return _data_field(unavailable_field(note=note))
-    return _data_field(live_field(value, source=source))
+    return _data_field(estimated_field(value, source=source, note=estimate_note))
 
 
 def _price_source(price_data: dict) -> str:
@@ -172,9 +208,9 @@ def build_truth_response(
             "isMonopole": _data_field(reference_field(climat.get("is_monopole"))),
         },
         "price": {
-            "average": _live_market_field(price_data.get("avg_price_usd"), price_source, no_market_note),
-            "low": _live_market_field(price_data.get("min_price_usd"), price_source, no_market_note),
-            "high": _live_market_field(price_data.get("max_price_usd"), price_source, no_market_note),
+            "average": _estimated_market_field(price_data.get("avg_price_usd"), price_source, no_market_note),
+            "low": _estimated_market_field(price_data.get("min_price_usd"), price_source, no_market_note),
+            "high": _estimated_market_field(price_data.get("max_price_usd"), price_source, no_market_note),
             "currency": _data_field(reference_field("USD", note="Currency for normalized market fields.")),
             "history": _data_field(unavailable_field(note="Price history requires stored time-series observations.")),
             "merchantCoverage": _data_field(unavailable_field(note=no_coverage_note)),

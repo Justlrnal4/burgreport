@@ -13,7 +13,7 @@ from urllib.parse import urlparse
 
 import httpx
 
-from services import reference_data
+from services import price_quality, reference_data
 
 logger = logging.getLogger("burgreport.tavily_search")
 
@@ -194,7 +194,7 @@ def get_wine_price(wine_name: str, vintage: int | None = None) -> dict:
             "No direct USD bottle prices found in trusted search snippets",
         )
 
-    return {
+    return price_quality.sanitize_price_data({
         "avg_price_usd": round(sum(prices) / len(prices), 2),
         "min_price_usd": min(prices),
         "max_price_usd": max(prices),
@@ -206,4 +206,4 @@ def get_wine_price(wine_name: str, vintage: int | None = None) -> dict:
         "confidence": "unavailable",
         "notes": "Parsed from search result snippets; verify linked merchant pages.",
         "source": "tavily_search_snippets",
-    }
+    })

@@ -66,9 +66,12 @@ class TavilySearchTests(unittest.TestCase):
         result = tavily_search.get_wine_price("La Tache", 2019)
 
         self.assertEqual(result["source"], "tavily_search_snippets")
+        # A single observation is a point estimate, not a range: the quality layer
+        # keeps the average and nulls the equal min/max so the UI cannot present a
+        # zero-spread "$5,500 – $5,500" band (see services.price_quality).
         self.assertEqual(result["avg_price_usd"], 5500.0)
-        self.assertEqual(result["min_price_usd"], 5500.0)
-        self.assertEqual(result["max_price_usd"], 5500.0)
+        self.assertIsNone(result["min_price_usd"])
+        self.assertIsNone(result["max_price_usd"])
 
 
 if __name__ == "__main__":

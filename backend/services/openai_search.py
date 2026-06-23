@@ -12,6 +12,8 @@ from typing import Optional
 
 from openai import APIConnectionError, APIStatusError, APITimeoutError, AuthenticationError, BadRequestError, OpenAI, RateLimitError
 
+from services import price_quality
+
 logger = logging.getLogger("burgreport.openai_search")
 
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
@@ -190,14 +192,11 @@ Return JSON matching the requested schema."""
         if not data:
             return _empty_price("openai_parse_error")
         data["source"] = "openai_web_search"
-        # A $0 (or negative) market price is never real — a "searched but found no
-        # number" result. Coerce to null so it reads as unavailable everywhere
-        # (legacy block, truth block, and the cache-write guard) instead of an
-        # authoritative $0 quote.
-        for _k in ("avg_price_usd", "min_price_usd", "max_price_usd"):
-            _v = data.get(_k)
-            if _v is not None and _v <= 0:
-                data[_k] = None
+        # Enforce honesty/quality invariants before this reaches the API or cache:
+        # drops self-referential/unparseable sources, nulls implausible prices
+        # ($0/$1 placeholders), drops fabricated merchant counts, and collapses
+        # zero-spread "ranges" to a single point. See services.price_quality.
+        data = price_quality.sanitize_price_data(data)
         logger.info(f"OpenAI price lookup complete: {wine_name} avg=${data.get('avg_price_usd')}")
         return data
     except Exception as exc:
