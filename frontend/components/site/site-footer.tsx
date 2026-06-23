@@ -1,5 +1,5 @@
-import Image from 'next/image';
 import Link from 'next/link';
+import { BurgReportLogo } from '@/components/brand/burg-report-logo';
 
 export function SiteFooter() {
   return (
@@ -7,16 +7,8 @@ export function SiteFooter() {
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-8 md:grid-cols-[1.2fr_1fr_1fr]">
           <div>
-            <Link href="/" aria-label="BurgReport home" className="inline-block">
-              <Image
-                src="/burgreport-logo.png"
-                alt="BurgReport — Burgundy Grand Cru Intelligence"
-                width={1500}
-                height={836}
-                className="h-auto w-[230px]"
-              />
-            </Link>
-            <p className="mt-5 max-w-md text-sm leading-6 text-muted">
+            <BurgReportLogo size="lg" />
+            <p className="mt-6 max-w-md text-sm leading-6 text-muted">
               Grand Cru Burgundy pricing intelligence for collectors, sommeliers, retailers, and investors.
               Estimated, reference, and unavailable fields are clearly labeled — never fabricated.
             </p>
