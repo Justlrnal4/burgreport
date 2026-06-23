@@ -170,7 +170,7 @@ export function HeroSearch({ wines, variant = 'compact', initialWine = '', initi
           />
         </div>
 
-        <button type="submit" className="h-12 rounded-xl bg-wine px-6 text-sm font-bold text-cream transition hover:bg-gold hover:text-ink">
+        <button type="submit" className="h-12 rounded-xl bg-gold px-6 text-sm font-bold text-ink transition hover:bg-cream">
           Search
         </button>
       </div>

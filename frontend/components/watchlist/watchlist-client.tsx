@@ -31,7 +31,7 @@ export function WatchlistClient() {
         </p>
         <Link
           href="/search"
-          className="mt-4 inline-flex rounded-lg bg-wine px-4 py-2.5 text-sm font-bold text-cream transition hover:bg-gold hover:text-ink"
+          className="mt-4 inline-flex rounded-lg bg-gold px-4 py-2.5 text-sm font-bold text-ink transition hover:bg-cream"
         >
           Start searching →
         </Link>

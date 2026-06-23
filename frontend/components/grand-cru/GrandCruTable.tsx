@@ -72,7 +72,7 @@ export function GrandCruTable({ wines }: { wines: GrandCru[] }) {
                     <Link className="rounded-lg border border-line px-3 py-1.5 text-xs font-semibold text-cream transition hover:border-gold/60 hover:text-gold" href={`/grand-cru/${wine.slug}`}>
                       Details
                     </Link>
-                    <Link className="rounded-lg bg-wine px-3 py-1.5 text-xs font-semibold text-cream transition hover:bg-gold hover:text-ink" href={`/search?wine=${encodeURIComponent(wine.name)}`}>
+                    <Link className="rounded-lg bg-gold px-3 py-1.5 text-xs font-semibold text-ink transition hover:bg-cream" href={`/search?wine=${encodeURIComponent(wine.name)}`}>
                       Search
                     </Link>
                   </div>
