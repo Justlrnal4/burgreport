@@ -1,4 +1,5 @@
 import { DataQualityBadge } from '@/components/data-quality/DataQualityBadge';
+import { SaveButton } from '@/components/search-terminal/SaveButton';
 import type { SearchResult } from '@/types/burgreport';
 
 export function ResultIdentityStrip({ result }: { result: SearchResult }) {
@@ -12,6 +13,7 @@ export function ResultIdentityStrip({ result }: { result: SearchResult }) {
             <DataQualityBadge status="reference" />
             <DataQualityBadge status={priceStatus} />
             {result.climat.isMonopole && <span className="rounded-full border border-gold/40 bg-gold/10 px-3 py-1 font-mono text-[10px] uppercase tracking-normal text-gold">Monopole</span>}
+            <SaveButton slug={result.climat.slug} name={result.climat.name} vintage={result.vintage} />
           </div>
           <h1 className="mt-3 text-3xl font-semibold tracking-normal text-cream md:text-5xl">{result.climat.name}</h1>
           <p className="mt-2 text-sm leading-6 text-muted">

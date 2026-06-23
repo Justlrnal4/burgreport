@@ -7,10 +7,10 @@ import { BurgReportLogo } from '@/components/brand/burg-report-logo';
 import { cn } from '@/lib/utils/cn';
 
 const NAV = [
-  { href: '/#features', label: 'Features' },
-  { href: '/#how-it-works', label: 'How it works' },
   { href: '/grand-cru', label: 'Grand Cru Guide' },
-  { href: '/vintages', label: 'Vintages' }
+  { href: '/vintages', label: 'Vintages' },
+  { href: '/watchlist', label: 'Watchlist' },
+  { href: '/methodology', label: 'Methodology' }
 ];
 
 export function SiteHeader() {

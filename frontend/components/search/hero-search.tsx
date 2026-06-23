@@ -3,6 +3,7 @@
 import { useId, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { GrandCru } from '@/types/burgreport';
+import { recordRecent } from '@/lib/watchlist';
 import { cn } from '@/lib/utils/cn';
 
 interface HeroSearchProps {
@@ -43,6 +44,7 @@ export function HeroSearch({ wines, variant = 'compact', initialWine = '', initi
     const params = new URLSearchParams({ wine });
     if (vintage.trim()) params.set('vintage', vintage.trim());
     if (quoted.trim()) params.set('quoted', quoted.trim());
+    recordRecent({ wine, vintage: vintage.trim() || undefined });
     router.push(`/search?${params.toString()}`);
     setOpen(false);
   }

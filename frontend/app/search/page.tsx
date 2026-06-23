@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { SearchEmptyState } from '@/components/search/search-empty-state';
 import { NotFoundState } from '@/components/search/not-found-state';
+import { RecentSearches } from '@/components/search/recent-searches';
 import { DataQualityLegend } from '@/components/data-quality/DataQualityLegend';
 import { SearchCommandBar } from '@/components/search-terminal/SearchCommandBar';
 import { SearchTerminal } from '@/components/search-terminal/SearchTerminal';
@@ -91,7 +92,12 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         </div>
 
         <div className="mt-5">
-          {!wine && <SearchEmptyState />}
+          {!wine && (
+            <>
+              <RecentSearches />
+              <SearchEmptyState />
+            </>
+          )}
           {isNotFound && <NotFoundState query={wine} suggestions={suggestClimats(wine)} />}
           {payload?.error && !isNotFound && (
             <div className="mb-5 rounded-2xl border border-danger/35 bg-danger/10 p-5 text-sm text-danger">
