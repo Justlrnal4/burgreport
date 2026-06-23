@@ -49,7 +49,7 @@ export function SiteFooter() {
             <span aria-hidden className="hidden h-3 w-px bg-line sm:inline-block" />
             <a href="https://www.linkedin.com/in/justinerwinlv/" target="_blank" rel="noopener noreferrer" className="transition hover:text-gold">LinkedIn</a>
             <span aria-hidden className="hidden h-3 w-px bg-line sm:inline-block" />
-            <a href="https://justinerwin.com" target="_blank" rel="noopener noreferrer" className="transition hover:text-gold">justinerwin.com</a>
+            <a href="https://justinerwin.com" target="_blank" rel="noopener noreferrer" className="transition hover:text-gold">Portfolio ↗</a>
           </div>
         </div>
       </div>
