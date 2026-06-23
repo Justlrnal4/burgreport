@@ -1,6 +1,7 @@
 import 'server-only';
 import { GRAND_CRUS, findGrandCruByName, getGrandCruBySlug, normalizeWineName, relatedGrandCrus } from '@/lib/data/grand-crus';
 import { getVintage } from '@/lib/data/vintages';
+import { prettyDomain } from '@/lib/utils/format';
 import type {
   ApiWine,
   BackendSearchResponse,
@@ -275,7 +276,17 @@ function normalizeMerchants(sources: MerchantQuote[] | string[] | null | undefin
   return sources
     .map((source) => {
       if (typeof source === 'string') {
-        return { merchant: source, priceUsd: null, source: 'live' as DataSource };
+        const trimmed = source.trim();
+        if (!trimmed) return null;
+        // Backend sends sanitized bare source URLs. Present the merchant domain,
+        // not the raw URL, and link to the listing only when it is a valid URL.
+        let url: string | undefined;
+        try {
+          url = new URL(trimmed).href;
+        } catch {
+          url = undefined;
+        }
+        return { merchant: prettyDomain(trimmed), priceUsd: null, url, source: 'live' as DataSource };
       }
       if (!source || typeof source !== 'object') return null;
       return {

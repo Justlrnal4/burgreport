@@ -22,3 +22,14 @@ export function titleCase(value: string): string {
     .map((part) => (part.length ? part[0].toUpperCase() + part.slice(1).toLowerCase() : part))
     .join(' ');
 }
+
+// Source links are presented as their bare merchant domain (no scheme, no path,
+// no tracking params), never the raw URL string. Falls back to the input if it
+// is not a parseable URL.
+export function prettyDomain(value: string): string {
+  try {
+    return new URL(value).hostname.replace(/^www\./, '');
+  } catch {
+    return value;
+  }
+}

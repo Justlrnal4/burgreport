@@ -1,4 +1,5 @@
 import { ResultQualityBadge } from '@/components/data-quality/ResultQualityBadge';
+import { prettyDomain } from '@/lib/utils/format';
 import type { DefenseBasis, SearchResult } from '@/types/burgreport';
 
 const BASIS_LABEL: Record<DefenseBasis, string> = {
@@ -6,14 +7,6 @@ const BASIS_LABEL: Record<DefenseBasis, string> = {
   'vintage reference': 'Vintage ref',
   'web-sourced': 'Web-sourced'
 };
-
-function prettyDomain(url: string): string {
-  try {
-    return new URL(url).hostname.replace(/^www\./, '');
-  } catch {
-    return url;
-  }
-}
 
 export function PriceDefensePanel({ result }: { result: SearchResult }) {
   const defense = result.defense;
