@@ -10,14 +10,16 @@ interface HeroSearchProps {
   variant?: 'hero' | 'compact';
   initialWine?: string;
   initialVintage?: string;
+  initialQuoted?: string;
 }
 
-export function HeroSearch({ wines, variant = 'compact', initialWine = '', initialVintage = '' }: HeroSearchProps) {
+export function HeroSearch({ wines, variant = 'compact', initialWine = '', initialVintage = '', initialQuoted = '' }: HeroSearchProps) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const baseId = useId();
   const [query, setQuery] = useState(initialWine);
   const [vintage, setVintage] = useState(initialVintage.replace(/[^0-9]/g, '').slice(0, 4));
+  const [quoted, setQuoted] = useState(initialQuoted.replace(/[^0-9]/g, '').slice(0, 8));
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -40,6 +42,7 @@ export function HeroSearch({ wines, variant = 'compact', initialWine = '', initi
     }
     const params = new URLSearchParams({ wine });
     if (vintage.trim()) params.set('vintage', vintage.trim());
+    if (quoted.trim()) params.set('quoted', quoted.trim());
     router.push(`/search?${params.toString()}`);
     setOpen(false);
   }
@@ -66,7 +69,7 @@ export function HeroSearch({ wines, variant = 'compact', initialWine = '', initi
         submit();
       }}
     >
-      <div className="grid gap-2 md:grid-cols-[1fr_140px_auto]">
+      <div className="grid gap-2 md:grid-cols-[1fr_110px_150px_auto]">
         <div className="relative">
           <label htmlFor={`${baseId}-wine-search`} className="sr-only">Search Grand Cru</label>
           <input
@@ -146,6 +149,22 @@ export function HeroSearch({ wines, variant = 'compact', initialWine = '', initi
             onChange={(event) => setVintage(event.target.value.replace(/[^0-9]/g, '').slice(0, 4))}
             placeholder="Vintage"
             className="h-12 w-full rounded-xl border border-line bg-ink px-4 font-mono text-base text-cream placeholder:font-sans placeholder:text-hint transition focus:border-gold"
+          />
+        </div>
+
+        <div className="relative">
+          <label htmlFor={`${baseId}-quoted`} className="sr-only">Price you were quoted (optional)</label>
+          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 font-mono text-base text-hint">$</span>
+          <input
+            id={`${baseId}-quoted`}
+            inputMode="numeric"
+            pattern="[0-9]*"
+            maxLength={8}
+            value={quoted}
+            onChange={(event) => setQuoted(event.target.value.replace(/[^0-9]/g, '').slice(0, 8))}
+            placeholder="Quoted price"
+            title="Optional: the price you were quoted, to compare against public listings"
+            className="h-12 w-full rounded-xl border border-line bg-ink pl-7 pr-3 font-mono text-base text-cream placeholder:font-sans placeholder:text-hint transition focus:border-gold"
           />
         </div>
 

@@ -7,7 +7,9 @@ import type { SearchResult } from '@/types/burgreport';
 
 export function MarketPricePanel({ result }: { result: SearchResult }) {
   const hasAverage = result.avgUsd !== null;
-  const status = hasAverage ? 'live' : 'unavailable';
+  // A web-sourced price is an ESTIMATE, never "live" (green). 'live' is reserved
+  // for a future licensed/first-party feed — mirrors the backend truth model.
+  const status = hasAverage ? 'estimated' : 'unavailable';
 
   return (
     <PanelShell title="Market price" eyebrow="Price context" status={status}>
@@ -35,7 +37,7 @@ export function MarketPricePanel({ result }: { result: SearchResult }) {
       <div className="mt-4 rounded-xl border border-line bg-surface/70 p-3">
         <div className="flex items-center justify-between gap-3">
           <p className="font-mono text-[10px] uppercase tracking-normal text-hint">Currency</p>
-          <DataQualityBadge status={hasAverage ? 'live' : 'unavailable'} compact />
+          <DataQualityBadge status={hasAverage ? 'estimated' : 'unavailable'} compact />
         </div>
         <p className="mt-1 font-mono text-sm text-cream">{hasAverage ? 'USD' : 'Unavailable'}</p>
       </div>
@@ -48,7 +50,7 @@ function PriceMetric({ label, value, live }: { label: string; value: string; liv
     <div className="rounded-xl border border-line bg-surface/70 p-3">
       <div className="flex items-center justify-between gap-2">
         <p className="font-mono text-[10px] uppercase tracking-normal text-hint">{label}</p>
-        <DataQualityBadge status={live ? 'live' : 'unavailable'} compact />
+        <DataQualityBadge status={live ? 'estimated' : 'unavailable'} compact />
       </div>
       <p className="mt-2 font-mono text-lg text-cream">{value}</p>
     </div>

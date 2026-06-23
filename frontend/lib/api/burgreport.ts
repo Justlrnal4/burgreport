@@ -75,15 +75,17 @@ export async function fetchWines(): Promise<GrandCru[]> {
   return GRAND_CRUS.map((wine) => normalized.get(wine.slug) || wine);
 }
 
-export async function searchWine(wineName: string, vintage?: string): Promise<SearchPayload> {
+export async function searchWine(wineName: string, vintage?: string, quotedPrice?: string): Promise<SearchPayload> {
   const cleaned = wineName.trim();
   if (!cleaned) {
     return { result: null, error: { status: 'invalid-query', message: 'Enter a Grand Cru name to search.' } };
   }
 
   const safeVintage = normalizeVintage(vintage);
+  const safeQuoted = normalizeQuotedPrice(quotedPrice);
   const query = new URLSearchParams({ wine_name: cleaned });
   if (safeVintage) query.set('vintage', safeVintage);
+  if (safeQuoted !== null) query.set('quoted_price', String(safeQuoted));
 
   const backend = await fetchBackendJson<BackendSearchResponse>(`/api/search?${query.toString()}`);
   if (!backend.ok) {
@@ -221,7 +223,8 @@ function normalizeSearchResponse(query: string, requestedVintage: string | undef
       dataSource: avgUsd === null ? 'missing' : 'live',
       sourceNotes,
       quality: response.truth?.quality ?? null,
-      defense: response.defense ?? null
+      defense: response.defense ?? null,
+      verdict: response.verdict ?? null
     },
     error: null
   };
@@ -253,7 +256,8 @@ function buildLocalFallback(query: string, vintage?: string): SearchResult | nul
     dataSource: 'missing',
     sourceNotes: [],
     quality: null,
-    defense: null
+    defense: null,
+    verdict: null
   };
 }
 
@@ -286,7 +290,7 @@ function normalizeMerchants(sources: MerchantQuote[] | string[] | null | undefin
         } catch {
           url = undefined;
         }
-        return { merchant: prettyDomain(trimmed), priceUsd: null, url, source: 'live' as DataSource };
+        return { merchant: prettyDomain(trimmed), priceUsd: null, url, source: 'estimated' as DataSource };
       }
       if (!source || typeof source !== 'object') return null;
       return {
@@ -353,6 +357,14 @@ function normalizeVintage(value: string | undefined): string | undefined {
   return trimmed;
 }
 
+function normalizeQuotedPrice(value: string | undefined): number | null {
+  const trimmed = value?.toString().trim().replace(/[$,\s]/g, '');
+  if (!trimmed) return null;
+  const parsed = Number(trimmed);
+  if (!Number.isFinite(parsed) || parsed <= 0 || parsed > 10_000_000) return null;
+  return Math.round(parsed);
+}
+
 function nullableNumber(value: unknown): number | null {
   if (value === null || value === undefined || value === '') return null;
   const parsed = Number(value);
@@ -361,5 +373,8 @@ function nullableNumber(value: unknown): number | null {
 
 function normalizeSource(value: unknown): DataSource {
   if (value === 'live' || value === 'estimated' || value === 'sample' || value === 'missing') return value;
-  return 'live';
+  // Default to 'estimated', never 'live'. Web-sourced history/comparables/merchant
+  // rows flow through here; 'live' is reserved for a licensed/first-party feed, so
+  // an unknown source must not render as authoritative (green).
+  return 'estimated';
 }

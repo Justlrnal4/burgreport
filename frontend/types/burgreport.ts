@@ -48,6 +48,33 @@ export interface PriceDefense {
   summary: string;
 }
 
+export type VerdictStance = 'insufficient' | 'context' | 'in_line' | 'above' | 'well_above' | 'below';
+
+export interface VerdictFactor {
+  label: string;
+  detail: string;
+  basis: 'reference' | 'estimate';
+}
+
+export interface VerdictBand {
+  avg: number | null;
+  low: number | null;
+  high: number | null;
+}
+
+export interface DefensibilityVerdict {
+  stance: VerdictStance;
+  headline: string;
+  summary: string;
+  quotedPrice: number | null;
+  band: VerdictBand;
+  sourceCount: number;
+  confidence: QualityConfidence;
+  factors: VerdictFactor[];
+  gate: string | null;
+  caveat: string;
+}
+
 export interface GrandCru {
   id: number;
   slug: string;
@@ -120,6 +147,7 @@ export interface BackendSearchResponse {
     quality?: ResultQuality;
   };
   defense?: PriceDefense;
+  verdict?: DefensibilityVerdict;
   error?: string;
 }
 
@@ -169,6 +197,7 @@ export interface SearchResult {
   sourceNotes: string[];
   quality: ResultQuality | null;
   defense: PriceDefense | null;
+  verdict: DefensibilityVerdict | null;
 }
 
 export interface SearchError {

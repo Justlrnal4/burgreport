@@ -2,10 +2,10 @@ import { DataQualityBadge } from '@/components/data-quality/DataQualityBadge';
 import type { DataStatus } from '@/types/burgreport';
 
 const ITEMS: Array<{ status: DataStatus; label: string; text: string }> = [
-  { status: 'live', label: 'Live', text: 'returned by backend' },
-  { status: 'estimated', label: 'Estimated', text: 'calculated and labeled' },
-  { status: 'reference', label: 'Reference', text: 'static context' },
+  { status: 'estimated', label: 'Estimated', text: 'web-sourced, unvalidated' },
+  { status: 'reference', label: 'Reference', text: 'static climat / vintage' },
   { status: 'unavailable', label: 'Unavailable', text: 'not enough data' },
+  { status: 'live', label: 'Live', text: 'licensed feed (reserved)' },
   { status: 'example', label: 'Example', text: 'illustrative only' }
 ];
 

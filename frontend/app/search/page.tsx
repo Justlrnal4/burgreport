@@ -7,7 +7,7 @@ import { GRAND_CRUS } from '@/lib/data/grand-crus';
 import { searchWine } from '@/lib/api/burgreport';
 
 interface SearchPageProps {
-  searchParams: Promise<{ wine?: string; vintage?: string }>;
+  searchParams: Promise<{ wine?: string; vintage?: string; quoted?: string }>;
 }
 
 export async function generateMetadata({ searchParams }: SearchPageProps): Promise<Metadata> {
@@ -37,7 +37,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const wine = params.wine?.trim() || '';
   const vintageParam = params.vintage?.trim() || '';
   const vintage = /^\d{4}$/.test(vintageParam) ? vintageParam : '';
-  const payload = wine ? await searchWine(wine, vintage) : null;
+  const quoted = (params.quoted?.trim() || '').replace(/[^0-9]/g, '').slice(0, 8);
+  const payload = wine ? await searchWine(wine, vintage, quoted) : null;
 
   return (
     <section className="px-4 py-8 sm:px-6 lg:px-8">
@@ -53,7 +54,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         </div>
 
         <div className="mt-6">
-          <SearchCommandBar wines={GRAND_CRUS} initialWine={wine} initialVintage={vintage} canShare={Boolean(payload?.result)} />
+          <SearchCommandBar wines={GRAND_CRUS} initialWine={wine} initialVintage={vintage} initialQuoted={quoted} canShare={Boolean(payload?.result)} />
         </div>
 
         <div className="mt-4">

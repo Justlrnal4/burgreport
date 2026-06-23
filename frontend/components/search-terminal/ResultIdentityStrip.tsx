@@ -2,7 +2,7 @@ import { DataQualityBadge } from '@/components/data-quality/DataQualityBadge';
 import type { SearchResult } from '@/types/burgreport';
 
 export function ResultIdentityStrip({ result }: { result: SearchResult }) {
-  const priceStatus = result.avgUsd === null ? 'unavailable' : 'live';
+  const priceStatus = result.avgUsd === null ? 'unavailable' : 'estimated';
 
   return (
     <section className="rounded-2xl border border-line bg-surface p-4 shadow-card">

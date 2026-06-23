@@ -4,8 +4,8 @@ import type { DataStatus, SearchResult } from '@/types/burgreport';
 
 export function SourceAvailabilityMatrix({ result }: { result: SearchResult }) {
   const rows: Array<{ label: string; status: DataStatus; note: string }> = [
-    { label: 'Price range', status: result.minUsd !== null || result.maxUsd !== null ? 'live' : 'unavailable', note: 'Backend price fields' },
-    { label: 'Merchant coverage', status: result.merchants.length ? 'live' : 'unavailable', note: 'Backend source array' },
+    { label: 'Price range', status: result.minUsd !== null || result.maxUsd !== null ? 'estimated' : 'unavailable', note: 'Web-sourced estimate' },
+    { label: 'Public listings', status: result.merchants.length ? 'estimated' : 'unavailable', note: 'Sources seen in this search' },
     { label: 'Price history', status: result.priceHistory.length >= 2 ? historyStatus(result) : 'unavailable', note: 'Backend history array' },
     { label: 'Comparables', status: comparablesStatus(result), note: 'Backend or explicit estimates' },
     { label: 'Vintage signal', status: result.vintageStars || result.vintageLabel || result.vintageNote ? 'reference' : 'unavailable', note: 'Vintage reference context' },
@@ -13,7 +13,7 @@ export function SourceAvailabilityMatrix({ result }: { result: SearchResult }) {
   ];
 
   return (
-    <PanelShell title="Source availability" eyebrow="Data matrix" status={rows.some((row) => row.status === 'live') ? 'live' : 'reference'}>
+    <PanelShell title="Source availability" eyebrow="Data matrix" status={rows.some((row) => row.status === 'estimated') ? 'estimated' : 'reference'}>
       <div className="divide-y divide-line overflow-hidden rounded-xl border border-line">
         {rows.map((row) => (
           <div key={row.label} className="grid grid-cols-[1fr_auto] gap-3 bg-surface/60 px-3 py-3">

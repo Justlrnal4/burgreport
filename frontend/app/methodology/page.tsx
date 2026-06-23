@@ -3,20 +3,20 @@ import { DataQualityBadge } from '@/components/data-quality/DataQualityBadge';
 
 export const metadata: Metadata = {
   title: 'Methodology',
-  description: 'How BurgReport labels live, estimated, reference, and unavailable Burgundy pricing context.',
+  description: 'How BurgReport labels estimated, reference, and unavailable Burgundy pricing context — and why prices are never presented as authoritative.',
   alternates: { canonical: '/methodology' }
 };
 
 const rows = [
   {
-    status: 'live' as const,
-    title: 'Backend-returned values',
-    body: 'Shown only when the BurgReport backend returns the field for the requested climat and vintage.'
+    status: 'estimated' as const,
+    title: 'Web-sourced price estimates',
+    body: 'Prices come from public merchant listings via web search (OpenAI / Tavily), not a licensed market feed. They are unvalidated estimates, labeled as such, with a confidence that is capped below "authoritative" — verify with the merchant before relying on a number.'
   },
   {
-    status: 'estimated' as const,
-    title: 'Calculated or inferred fields',
-    body: 'Used only when explicitly enabled and visibly labeled as estimated. Estimated fields should not replace source-backed market data.'
+    status: 'live' as const,
+    title: 'Licensed / first-party feed (reserved)',
+    body: 'The "Live" status is reserved for a future licensed or first-party data feed. It is deliberately NOT used for web-sourced prices today — we do not license Wine-Searcher or Liv-ex, and we will not present a web estimate as an authoritative market figure.'
   },
   {
     status: 'reference' as const,
@@ -62,7 +62,7 @@ export default function MethodologyPage() {
         <div className="mt-8 rounded-2xl border border-gold/25 bg-ink p-5">
           <h2 className="text-lg font-semibold text-cream">How this improves over time</h2>
           <p className="mt-2 text-sm leading-6 text-muted">
-            As backend coverage improves, unavailable fields can become live fields without changing the trust model. BurgReport should continue to label each field by source status before making any pricing claim.
+            As coverage improves, unavailable fields can become estimated fields without changing the trust model — and if we ever add a licensed feed, that data earns the reserved &ldquo;Live&rdquo; status, walled off from the web-sourced estimates. BurgReport labels each field by source status before making any pricing claim.
           </p>
         </div>
       </div>

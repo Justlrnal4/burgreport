@@ -6,7 +6,7 @@ import type { SearchResult } from '@/types/burgreport';
 
 export function MerchantCoveragePanel({ result }: { result: SearchResult }) {
   return (
-    <PanelShell title="Merchant coverage" eyebrow="Source coverage" status={result.merchants.length ? 'live' : 'unavailable'}>
+    <PanelShell title="Public listings" eyebrow="Sources seen" status={result.merchants.length ? 'estimated' : 'unavailable'}>
       {result.merchants.length ? (
         <div className="grid gap-2">
           {result.merchants.map((merchant) => {

@@ -10,12 +10,12 @@ interface DataQualityBadgeProps {
 const STATUS_META: Record<DataStatus, { label: string; title: string; className: string }> = {
   live: {
     label: 'Live',
-    title: 'Live: returned by backend',
+    title: 'Live: licensed or first-party feed (reserved — not used for web-sourced prices)',
     className: 'border-success/45 bg-success/10 text-success'
   },
   estimated: {
     label: 'Estimated',
-    title: 'Estimated: calculated or inferred and labeled',
+    title: 'Estimated: unvalidated estimate parsed from public listings',
     className: 'border-gold/50 bg-gold/10 text-gold'
   },
   reference: {

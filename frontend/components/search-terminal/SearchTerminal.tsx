@@ -7,6 +7,7 @@ import { PriceDefensePanel } from '@/components/search-terminal/PriceDefensePane
 import { PriceHistoryPanel } from '@/components/search-terminal/PriceHistoryPanel';
 import { ResultIdentityStrip } from '@/components/search-terminal/ResultIdentityStrip';
 import { SourceAvailabilityMatrix } from '@/components/search-terminal/SourceAvailabilityMatrix';
+import { VerdictPanel } from '@/components/search-terminal/VerdictPanel';
 import { VintageContextPanel } from '@/components/search-terminal/VintageContextPanel';
 import type { SearchResult } from '@/types/burgreport';
 
@@ -14,6 +15,8 @@ export function SearchTerminal({ result }: { result: SearchResult }) {
   return (
     <div className="grid gap-4">
       <ResultIdentityStrip result={result} />
+
+      <VerdictPanel result={result} />
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(360px,0.95fr)]">
         <div className="grid gap-4">

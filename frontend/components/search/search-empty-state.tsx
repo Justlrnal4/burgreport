@@ -13,7 +13,7 @@ export function SearchEmptyState() {
       <p className="font-mono text-xs uppercase tracking-normal text-gold">Start with a climat</p>
       <h2 className="mt-3 text-3xl font-semibold tracking-normal text-cream">Search all 34 Grand Crus.</h2>
       <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-muted">
-        Search a Grand Cru climat to inspect live, reference, estimated, and unavailable fields.
+        Search a Grand Cru climat to inspect estimated, reference, and unavailable fields — each labeled by source.
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-2">
         {examples.map((example) => (
