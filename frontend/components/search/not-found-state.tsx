@@ -11,7 +11,7 @@ export function NotFoundState({ query, suggestions }: { query: string; suggestio
       <h2 className="mt-2 text-2xl font-semibold text-cream">
         BurgReport covers the 34 Grand Cru climats{query ? ` — not “${query}” yet.` : '.'}
       </h2>
-      <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
+      <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
         We&apos;d rather say so than guess. Premier Cru and village coverage is on the roadmap. In the meantime, here are the closest climats we do cover:
       </p>
       {suggestions.length > 0 && (

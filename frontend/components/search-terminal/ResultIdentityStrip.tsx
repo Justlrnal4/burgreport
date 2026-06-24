@@ -16,7 +16,7 @@ export function ResultIdentityStrip({ result }: { result: SearchResult }) {
             <SaveButton slug={result.climat.slug} name={result.climat.name} vintage={result.vintage} />
           </div>
           <h1 className="mt-3 text-3xl font-semibold tracking-normal text-cream md:text-5xl">{result.climat.name}</h1>
-          <p className="mt-2 text-sm leading-6 text-muted">
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
             {result.vintage && <span className="font-mono text-gold">{result.vintage}</span>} {result.vintage ? '· ' : ''}
             {result.climat.village} · {result.climat.cote} · {result.climat.color} · {result.climat.grape}
           </p>

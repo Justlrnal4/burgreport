@@ -9,6 +9,34 @@
   --br-wine: #9B2D4A;
   --br-cream: #F5F0F0;
   --focus-ring: 0 0 0 3px rgba(201, 152, 106, 0.28);
+
+  /* shadcn/ui tokens mapped to the BurgReport palette (dark-only) so v0-generated
+     components adopt the brand automatically. HSL, no hsl() wrapper — shadcn convention. */
+  --background: 348 20% 5%;          /* ink   #0F0A0B */
+  --foreground: 0 20% 95%;           /* cream #F5F0F0 */
+  --card: 326 18% 8%;                /* surface #171014 */
+  --card-foreground: 0 20% 95%;
+  --popover: 306 18% 11%;            /* elevated #211720 */
+  --popover-foreground: 0 20% 95%;
+  --primary: 29 47% 60%;             /* gold  #C9986A */
+  --primary-foreground: 348 20% 5%;
+  --secondary: 306 18% 11%;
+  --secondary-foreground: 0 20% 95%;
+  --muted: 326 18% 8%;
+  --muted-foreground: 332 9% 69%;    /* #B7A8AF — the old `muted` text color */
+  --accent: 306 18% 11%;
+  --accent-foreground: 29 47% 60%;
+  --destructive: 0 55% 62%;          /* danger #D46A6A */
+  --destructive-foreground: 348 20% 5%;
+  --border: 308 19% 17%;             /* line  #332331 */
+  --input: 308 19% 17%;
+  --ring: 29 47% 60%;
+  --radius: 0.75rem;
+  --chart-1: 29 47% 60%;             /* gold */
+  --chart-2: 344 55% 39%;            /* wine */
+  --chart-3: 145 40% 55%;            /* success */
+  --chart-4: 332 9% 69%;             /* muted */
+  --chart-5: 333 8% 48%;             /* hint */
 }
 
 * {
@@ -24,12 +52,14 @@ html {
 body {
   min-height: 100vh;
   overflow-x: hidden;
+  /* Editorial near-black with a whisper of warmth — restraint over a SaaS gradient hero. */
   background:
-    radial-gradient(circle at 18% 12%, rgba(155, 45, 74, 0.18), transparent 28rem),
-    radial-gradient(circle at 82% 10%, rgba(201, 152, 106, 0.12), transparent 26rem),
-    #0F0A0B;
+    radial-gradient(120% 80% at 50% -10%, rgba(155, 45, 74, 0.10), transparent 60%),
+    radial-gradient(90% 60% at 88% 0%, rgba(201, 152, 106, 0.06), transparent 55%),
+    #0C0809;
   color: #F5F0F0;
   text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 body::before {
@@ -60,7 +90,37 @@ button, a, input, select, textarea {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Scroll-reveal primitive (see components/motion/reveal.tsx).
+   Visible by default so no-JS / crawlers / pre-hydration never see a blank page;
+   the `.js` class (set on <html> before paint) arms the hidden→reveal animation. */
+.reveal {
+  opacity: 1;
+  transform: none;
+}
+.js .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1), transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: opacity, transform;
+}
+.js .reveal-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hairline label rule for editorial section eyebrows */
+.eyebrow-rule::before {
+  content: '';
+  display: inline-block;
+  width: 1.5rem;
+  height: 1px;
+  margin-right: 0.6rem;
+  vertical-align: middle;
+  background: linear-gradient(90deg, #C9986A, transparent);
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .reveal, .js .reveal { opacity: 1; transform: none; transition: none; }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;

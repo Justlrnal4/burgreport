@@ -22,7 +22,7 @@ export function MarketPricePanel({ result }: { result: SearchResult }) {
               <ResultQualityBadge quality={result.quality} className="self-start" />
             </div>
           ) : (
-            <p className="mt-2 text-sm text-muted">Web-sourced estimate.</p>
+            <p className="mt-2 text-sm text-muted-foreground">Web-sourced estimate.</p>
           )}
           <SourcingStrengthXray result={result} />
         </>

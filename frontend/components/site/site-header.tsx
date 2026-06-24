@@ -31,7 +31,7 @@ export function SiteHeader() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'font-mono text-[11px] uppercase tracking-normal text-muted transition hover:text-gold',
+                  'font-mono text-[11px] uppercase tracking-normal text-muted-foreground transition hover:text-gold',
                   active && 'text-gold'
                 )}
               >
@@ -42,7 +42,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link href="/search" className="hidden rounded-lg bg-wine px-4 py-2.5 text-sm font-bold text-cream shadow-[0_10px_24px_rgba(155,45,74,0.22)] transition hover:bg-gold hover:text-ink sm:inline-flex">
+          <Link href="/search" className="hidden rounded-lg bg-gold px-4 py-2.5 text-sm font-bold text-ink shadow-[0_10px_30px_rgba(201,152,106,0.22)] transition hover:bg-cream sm:inline-flex">
             Start Searching →
           </Link>
           <button
@@ -74,7 +74,7 @@ export function SiteHeader() {
             <Link
               href="/search"
               onClick={() => setOpen(false)}
-              className="rounded-2xl bg-wine px-4 py-3 text-sm font-bold text-cream transition hover:bg-gold hover:text-ink"
+              className="rounded-2xl bg-gold px-4 py-3 text-sm font-bold text-ink transition hover:bg-cream"
             >
               Start Searching →
             </Link>

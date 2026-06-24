@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
-import { DataQualityBadge } from '@/components/data-quality/DataQualityBadge';
 import { GrandCruTable } from '@/components/grand-cru/GrandCruTable';
+import { PageHeader } from '@/components/site/page-header';
+import { Reveal } from '@/components/motion/reveal';
 import { GRAND_CRUS } from '@/lib/data/grand-crus';
 
 export const metadata: Metadata = {
@@ -11,22 +12,16 @@ export const metadata: Metadata = {
 
 export default function GrandCruIndexPage() {
   return (
-    <section className="px-4 py-10 sm:px-6 lg:px-8">
+    <section className="px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <div className="grid gap-5 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
-          <div>
-            <div className="flex items-center gap-3">
-              <p className="font-mono text-xs uppercase tracking-normal text-gold">Grand Cru Guide</p>
-              <DataQualityBadge status="reference" compact />
-            </div>
-            <h1 className="mt-3 text-4xl font-semibold tracking-normal text-cream md:text-5xl">All 34 Grand Cru climats.</h1>
-          </div>
-          <p className="text-sm leading-6 text-muted">
-            A filterable reference database for climat facts: name, village, Côte, color, grape, size, monopole status, and search actions.
-          </p>
-        </div>
-
-        <GrandCruTable wines={GRAND_CRUS} />
+        <PageHeader
+          eyebrow="Grand Cru Guide"
+          title="All 34 Grand Cru climats."
+          aside="A filterable reference for every climat — name, village, Côte, color, grape, size, and monopole status — each a one-tap jump into a live price check."
+        />
+        <Reveal delay={80}>
+          <GrandCruTable wines={GRAND_CRUS} />
+        </Reveal>
       </div>
     </section>
   );

@@ -21,7 +21,7 @@ export function ComparablesPanel({ result }: { result: SearchResult }) {
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="font-semibold text-cream">{comparable.name}</p>
-                  <p className="mt-1 text-xs leading-5 text-muted">{comparable.reason}</p>
+                  <p className="mt-1 text-xs leading-5 text-muted-foreground">{comparable.reason}</p>
                 </div>
                 <div className="text-right">
                   <p className="font-mono text-sm text-gold">{formatUsd(comparable.avgUsd)}</p>

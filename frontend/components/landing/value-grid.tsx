@@ -41,7 +41,7 @@ export function ValueGrid() {
                 <span className="font-mono text-sm text-hint">0{index + 1}</span>
               </div>
               <h3 className="mt-6 text-xl font-semibold text-cream">{card.title}</h3>
-              <p className="mt-4 text-sm leading-6 text-muted">{card.body}</p>
+              <p className="mt-4 text-sm leading-6 text-muted-foreground">{card.body}</p>
             </article>
           ))}
         </div>

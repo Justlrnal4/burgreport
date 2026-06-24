@@ -10,16 +10,17 @@ import { ResultIdentityStrip } from '@/components/search-terminal/ResultIdentity
 import { SourceAvailabilityMatrix } from '@/components/search-terminal/SourceAvailabilityMatrix';
 import { VerdictPanel } from '@/components/search-terminal/VerdictPanel';
 import { VintageContextPanel } from '@/components/search-terminal/VintageContextPanel';
+import { Reveal } from '@/components/motion/reveal';
 import type { SearchResult } from '@/types/burgreport';
 
 export function SearchTerminal({ result }: { result: SearchResult }) {
   return (
     <div className="grid gap-4">
-      <ResultIdentityStrip result={result} />
+      <Reveal><ResultIdentityStrip result={result} /></Reveal>
 
-      <VerdictPanel result={result} />
+      <Reveal delay={70}><VerdictPanel result={result} /></Reveal>
 
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(360px,0.95fr)]">
+      <Reveal delay={130} className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(360px,0.95fr)]">
         <div className="grid gap-4">
           <MarketPricePanel result={result} />
           <SourceAvailabilityMatrix result={result} />
@@ -28,19 +29,19 @@ export function SearchTerminal({ result }: { result: SearchResult }) {
           <ClimatReferencePanel result={result} />
           <VintageContextPanel result={result} />
         </div>
-      </div>
+      </Reveal>
 
-      <div className="grid gap-4 xl:grid-cols-3">
+      <Reveal className="grid gap-4 xl:grid-cols-3">
         <PriceHistoryPanel result={result} />
         <MerchantCoveragePanel result={result} />
         <ComparablesPanel result={result} />
-      </div>
+      </Reveal>
 
-      <PriceDefensePanel result={result} />
+      <Reveal><PriceDefensePanel result={result} /></Reveal>
 
-      <CitePanel result={result} />
+      <Reveal><CitePanel result={result} /></Reveal>
 
-      <MethodologyDisclosure />
+      <Reveal><MethodologyDisclosure /></Reveal>
     </div>
   );
 }

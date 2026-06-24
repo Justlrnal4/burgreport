@@ -7,7 +7,7 @@ export function UnavailableState({ title = 'Unavailable', detail }: { title?: st
         <p className="font-semibold text-cream">{title}</p>
         <DataQualityBadge status="unavailable" compact />
       </div>
-      <p className="mt-2 text-sm leading-6 text-muted">{detail}</p>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">{detail}</p>
     </div>
   );
 }

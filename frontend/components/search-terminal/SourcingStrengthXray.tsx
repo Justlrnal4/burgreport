@@ -42,14 +42,14 @@ export function SourcingStrengthXray({ result }: { result: SearchResult }) {
                 aria-hidden
               />
             </div>
-            <div className="mt-1.5 flex items-center justify-between font-mono text-xs text-muted">
+            <div className="mt-1.5 flex items-center justify-between font-mono text-xs text-muted-foreground">
               <span>{formatUsd(low)}</span>
               <span className="text-gold">avg {formatUsd(avg)}</span>
               <span>{formatUsd(high)}</span>
             </div>
           </>
         ) : (
-          <p className="text-xs leading-5 text-muted">
+          <p className="text-xs leading-5 text-muted-foreground">
             Single observed price ({formatUsd(avg)}) — no spread to show. A range needs at least two differing listings.
           </p>
         )}
@@ -59,7 +59,7 @@ export function SourcingStrengthXray({ result }: { result: SearchResult }) {
         <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-normal text-gold">Why this confidence</summary>
         <div className="mt-2 flex flex-wrap gap-1.5">
           {chips.map((chip) => (
-            <span key={chip} className="rounded-full border border-line bg-ink px-2 py-0.5 font-mono text-[10px] text-muted">
+            <span key={chip} className="rounded-full border border-line bg-ink px-2 py-0.5 font-mono text-[10px] text-muted-foreground">
               {chip}
             </span>
           ))}

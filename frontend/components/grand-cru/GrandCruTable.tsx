@@ -57,9 +57,9 @@ export function GrandCruTable({ wines }: { wines: GrandCru[] }) {
             {filtered.map((wine) => (
               <tr key={wine.slug} className="group">
                 <td className="border-b border-line px-3 py-3 font-semibold text-cream">{wine.name}</td>
-                <td className="border-b border-line px-3 py-3 text-muted">{wine.village}</td>
-                <td className="border-b border-line px-3 py-3 text-muted">{wine.cote}</td>
-                <td className="border-b border-line px-3 py-3 text-muted">{wine.color} · {wine.grape}</td>
+                <td className="border-b border-line px-3 py-3 text-muted-foreground">{wine.village}</td>
+                <td className="border-b border-line px-3 py-3 text-muted-foreground">{wine.cote}</td>
+                <td className="border-b border-line px-3 py-3 text-muted-foreground">{wine.color} · {wine.grape}</td>
                 <td className="border-b border-line px-3 py-3 font-mono text-gold">{wine.sizeHa} ha</td>
                 <td className="border-b border-line px-3 py-3">
                   <div className="flex items-center gap-2">
@@ -72,7 +72,7 @@ export function GrandCruTable({ wines }: { wines: GrandCru[] }) {
                     <Link className="rounded-lg border border-line px-3 py-1.5 text-xs font-semibold text-cream transition hover:border-gold/60 hover:text-gold" href={`/grand-cru/${wine.slug}`}>
                       Details
                     </Link>
-                    <Link className="rounded-lg bg-wine px-3 py-1.5 text-xs font-semibold text-cream transition hover:bg-gold hover:text-ink" href={`/search?wine=${encodeURIComponent(wine.name)}`}>
+                    <Link className="rounded-lg bg-gold px-3 py-1.5 text-xs font-semibold text-ink transition hover:bg-cream" href={`/search?wine=${encodeURIComponent(wine.name)}`}>
                       Search
                     </Link>
                   </div>

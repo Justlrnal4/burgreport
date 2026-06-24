@@ -19,7 +19,7 @@ export function HowItWorks() {
                 <span className="font-mono text-2xl text-gold">0{index + 1}</span>
                 <div>
                   <h3 className="text-xl font-semibold text-cream">{title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-muted">{body}</p>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">{body}</p>
                 </div>
               </div>
             ))}

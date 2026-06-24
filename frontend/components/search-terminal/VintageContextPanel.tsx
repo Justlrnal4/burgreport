@@ -14,7 +14,7 @@ export function VintageContextPanel({ result }: { result: SearchResult }) {
             <span className="text-xl text-gold">{'★'.repeat(result.vintageStars || 0)}{'☆'.repeat(Math.max(0, 5 - (result.vintageStars || 0)))}</span>
           </div>
           <p className="mt-3 text-sm font-semibold text-cream">{result.vintageLabel || 'Reference context'}</p>
-          <p className="mt-2 text-sm leading-6 text-muted">{result.vintageNote || 'Vintage note is unavailable for this query.'}</p>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">{result.vintageNote || 'Vintage note is unavailable for this query.'}</p>
         </>
       ) : (
         <UnavailableState detail={result.vintage ? 'Vintage signal is unavailable for this year and climat context.' : 'Add a vintage to inspect available vintage context.'} />
