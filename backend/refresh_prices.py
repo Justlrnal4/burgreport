@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from services import openai_search, supabase_client, tavily_search
+from services import openai_search, supabase_client, tavily_search, price_aggregate
 from services.reference_data import GRAND_CRUS as _GRAND_CRU_DEFS
 from services.reference_data import normalize_name
 
@@ -85,6 +85,21 @@ def _price_provider(name: str):
     raise ValueError(f"Unknown price refresh provider: {name}")
 
 
+def _fetch(provider_name: str, provider, wine: str, vintage: int) -> dict:
+    """Auto mode uses the SAME live aggregation path as the search router (real
+    merchant offers -> robust median + offer_count), so the refresh caches the
+    honest, offer-counted shape rather than the old domain-deduped summary that
+    the verdict gate reads as 'too thin'. A forced provider keeps its raw summary
+    path for debugging/back-compat.
+    Keep this in sync with routers/search.py."""
+    if provider_name == "auto":
+        offers = tavily_search.get_wine_offers(wine, vintage)
+        if offers:
+            return price_aggregate.aggregate_observations(offers, source="tavily_aggregated")
+        return openai_search.get_wine_price(wine, vintage)
+    return provider.get_wine_price(wine, vintage)
+
+
 def refresh_all(
     provider_name: str = "auto",
     limit: int | None = None,
@@ -111,7 +126,7 @@ def refresh_all(
                 success += 1
                 continue
 
-            price_data = provider.get_wine_price(wine, vintage)
+            price_data = _fetch(provider_name, provider, wine, vintage)
             if price_data.get("avg_price_usd"):
                 grand_cru = supabase_client.get_grand_cru(wine)
                 grand_cru_id = supabase_client.canonical_grand_cru_id(wine, grand_cru)
