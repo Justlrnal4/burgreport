@@ -62,14 +62,20 @@ button, a, input, select, textarea {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Scroll-reveal primitive (see components/motion/reveal.tsx) */
+/* Scroll-reveal primitive (see components/motion/reveal.tsx).
+   Visible by default so no-JS / crawlers / pre-hydration never see a blank page;
+   the `.js` class (set on <html> before paint) arms the hidden→reveal animation. */
 .reveal {
+  opacity: 1;
+  transform: none;
+}
+.js .reveal {
   opacity: 0;
   transform: translateY(18px);
   transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1), transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
   will-change: opacity, transform;
 }
-.reveal-in {
+.js .reveal-in {
   opacity: 1;
   transform: none;
 }
@@ -86,7 +92,7 @@ button, a, input, select, textarea {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal { opacity: 1; transform: none; transition: none; }
+  .reveal, .js .reveal { opacity: 1; transform: none; transition: none; }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;

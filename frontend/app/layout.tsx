@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, JetBrains_Mono, Cinzel } from 'next/font/google';
+import { Inter, JetBrains_Mono, Cinzel, Playfair_Display } from 'next/font/google';
 import { SiteHeader } from '@/components/site/site-header';
 import { SiteFooter } from '@/components/site/site-footer';
 import { absoluteUrl } from '@/lib/utils/seo';
@@ -8,6 +8,7 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 const jetBrains = JetBrains_Mono({ subsets: ['latin'], variable: '--font-jetbrains', display: 'swap' });
 const cinzel = Cinzel({ subsets: ['latin'], weight: ['500', '600', '700'], variable: '--font-cinzel', display: 'swap' });
+const playfair = Playfair_Display({ subsets: ['latin'], weight: ['500', '600', '700'], style: ['normal', 'italic'], variable: '--font-playfair', display: 'swap' });
 
 export const viewport: Viewport = {
   themeColor: '#0F0A0B',
@@ -43,8 +44,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetBrains.variable} ${cinzel.variable}`}>
+    <html lang="en" className={`${inter.variable} ${jetBrains.variable} ${cinzel.variable} ${playfair.variable}`}>
       <body className="font-sans antialiased">
+        {/* Arm scroll-reveal only when JS is live, before paint — so no-JS / crawlers / pre-hydration see full content, never a blank page. */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
         <SiteHeader />
         <main>{children}</main>
         <SiteFooter />

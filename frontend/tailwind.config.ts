@@ -24,7 +24,8 @@ const config: Config = {
       fontFamily: {
         sans: ['var(--font-inter)', 'Inter', 'system-ui', 'sans-serif'],
         mono: ['var(--font-jetbrains)', 'JetBrains Mono', 'ui-monospace', 'monospace'],
-        serif: ['var(--font-cinzel)', 'Cinzel', 'Georgia', 'serif']
+        serif: ['var(--font-cinzel)', 'Cinzel', 'Georgia', 'serif'],
+        display: ['var(--font-playfair)', 'Playfair Display', 'Georgia', 'serif']
       },
       boxShadow: {
         glow: '0 0 0 1px rgba(201, 152, 106, 0.18), 0 28px 90px rgba(155, 45, 74, 0.18)',
