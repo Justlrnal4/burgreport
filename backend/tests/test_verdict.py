@@ -45,20 +45,28 @@ class VerdictDirectionTests(unittest.TestCase):
         self.assertEqual(v["stance"], "context")
         self.assertIsNone(v["gate"])
 
-    def test_quote_well_above(self):
-        v = verdict.build_verdict("La Tâche", 2019, CLIMAT, _priced(avg=2000), RATING, _quality(3), quoted_price=3000)
-        self.assertEqual(v["stance"], "well_above")
-
-    def test_quote_above(self):
-        v = verdict.build_verdict("La Tâche", 2019, CLIMAT, _priced(avg=2000), RATING, _quality(3), quoted_price=2300)
+    def test_quote_above_entire_range(self):
+        # Quote exceeds the highest public listing → "above".
+        v = verdict.build_verdict("La Tâche", 2019, CLIMAT, _priced(avg=2000, low=1500, high=3000), RATING, _quality(3), quoted_price=5000)
         self.assertEqual(v["stance"], "above")
 
+    def test_quote_high_in_range(self):
+        # Within the producer range but toward the top (>=30% over median).
+        v = verdict.build_verdict("La Tâche", 2019, CLIMAT, _priced(avg=2000, low=1500, high=3000), RATING, _quality(3), quoted_price=2800)
+        self.assertEqual(v["stance"], "high_in_range")
+
     def test_quote_in_line(self):
-        v = verdict.build_verdict("La Tâche", 2019, CLIMAT, _priced(avg=2000), RATING, _quality(3), quoted_price=2050)
+        v = verdict.build_verdict("La Tâche", 2019, CLIMAT, _priced(avg=2000, low=1500, high=3000), RATING, _quality(3), quoted_price=2050)
         self.assertEqual(v["stance"], "in_line")
 
-    def test_quote_below(self):
-        v = verdict.build_verdict("La Tâche", 2019, CLIMAT, _priced(avg=2000), RATING, _quality(3), quoted_price=1400)
+    def test_quote_low_in_range(self):
+        # Within range but toward the bottom (<=20% under median).
+        v = verdict.build_verdict("La Tâche", 2019, CLIMAT, _priced(avg=2000, low=1500, high=3000), RATING, _quality(3), quoted_price=1550)
+        self.assertEqual(v["stance"], "low_in_range")
+
+    def test_quote_below_entire_range(self):
+        # Quote under the lowest public listing → "below".
+        v = verdict.build_verdict("La Tâche", 2019, CLIMAT, _priced(avg=2000, low=1500, high=3000), RATING, _quality(3), quoted_price=1000)
         self.assertEqual(v["stance"], "below")
 
     def test_confidence_never_authoritative_in_copy(self):

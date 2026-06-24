@@ -30,6 +30,7 @@ class OpenAIMigrationTests(unittest.TestCase):
         self.assertEqual(result["confidence"], "unavailable")
         self.assertEqual(result["source"], "openai_missing_key")
 
+    @patch("routers.search.tavily_search.get_wine_offers")
     @patch("routers.search.supabase_client.log_search")
     @patch("routers.search.supabase_client.get_vintage_rating")
     @patch("routers.search.airtable.get_climat_data")
@@ -46,9 +47,11 @@ class OpenAIMigrationTests(unittest.TestCase):
         get_climat_data,
         get_vintage_rating,
         log_search,
+        get_wine_offers,
     ):
         get_grand_cru.return_value = {"id": "la_tache", "name": "La Tache"}
         get_cached_price.return_value = None
+        get_wine_offers.return_value = []  # no Tavily offers → falls through to OpenAI
         get_wine_price.return_value = openai_search._empty_price("openai_missing_key")
         get_climat_data.return_value = {
             "name": "La Tache",

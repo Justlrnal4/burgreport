@@ -55,6 +55,7 @@ class TruthModelFoundationTests(unittest.TestCase):
             "la-tache",
         )
 
+    @patch("routers.search.tavily_search.get_wine_offers")
     @patch("routers.search.supabase_client.log_search")
     @patch("routers.search.supabase_client.get_vintage_rating")
     @patch("routers.search.openai_search.get_wine_price")
@@ -67,9 +68,11 @@ class TruthModelFoundationTests(unittest.TestCase):
         get_wine_price,
         get_vintage_rating,
         log_search,
+        get_wine_offers,
     ):
         get_grand_cru.return_value = None
         get_cached_price.return_value = None
+        get_wine_offers.return_value = []  # no Tavily offers → falls through to OpenAI
         get_wine_price.return_value = openai_search._empty_price("openai_missing_key")
         get_vintage_rating.return_value = None
 
@@ -90,6 +93,7 @@ class TruthModelFoundationTests(unittest.TestCase):
         self.assertIsNone(body["price"]["merchant_count"])
         log_search.assert_called_once()
 
+    @patch("routers.search.tavily_search.get_wine_offers")
     @patch("routers.search.supabase_client.log_search")
     @patch("routers.search.supabase_client.get_vintage_rating")
     @patch("routers.search.openai_search.get_wine_price")
@@ -102,9 +106,11 @@ class TruthModelFoundationTests(unittest.TestCase):
         get_wine_price,
         get_vintage_rating,
         log_search,
+        get_wine_offers,
     ):
         get_grand_cru.return_value = None
         get_cached_price.return_value = None
+        get_wine_offers.return_value = []  # no Tavily offers → falls through to OpenAI
         get_wine_price.return_value = openai_search._empty_price("openai_missing_key")
         get_vintage_rating.return_value = None
 

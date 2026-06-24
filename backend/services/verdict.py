@@ -85,7 +85,8 @@ def build_verdict(
     avg = price_data.get("avg_price_usd")
     low = price_data.get("min_price_usd")
     high = price_data.get("max_price_usd")
-    source_count = len(price_data.get("sources") or [])
+    raw_offers = price_data.get("offer_count")
+    source_count = raw_offers if isinstance(raw_offers, int) else len(price_data.get("sources") or [])
     score = quality.get("score", 0)
     confidence = quality.get("confidence", "unavailable")
     band = {"avg": avg, "low": low, "high": high}
@@ -122,30 +123,48 @@ def build_verdict(
             "caveat": CAVEAT,
         }
 
-    # ── We have ≥2 independent listings: a directional read is honest ─────────
+    # ── Enough offers for a directional read; frame it against the REAL band ──
+    # A Grand Cru spans producers, so we compare the quote to the median AND to
+    # where it lands inside the observed range — never a blunt "X% above" that
+    # ignores that a top-producer bottle legitimately sits at the high end.
     band_txt = (
-        f"{_fmt_usd(low)}–{_fmt_usd(high)} (around {_fmt_usd(avg)})"
+        f"{_fmt_usd(low)}–{_fmt_usd(high)} (median {_fmt_usd(avg)})"
         if low is not None and high is not None and low != high
         else f"around {_fmt_usd(avg)}"
     )
+    wide_spread = low is not None and high is not None and bool(avg) and (high - low) / avg > 0.6
+    producer_note = " and span producers" if wide_spread else ""
     listings_txt = f"{source_count} public listing{'s' if source_count != 1 else ''}"
     factors = _context_factors(vintage, climat, vintage_rating)
 
     if quoted_price is not None and avg:
         ratio = quoted_price / avg
-        if ratio >= WELL_ABOVE:
-            stance, phrase = "well_above", "well above the public listings"
-        elif ratio >= ABOVE:
-            stance, phrase = "above", "above the public listings"
-        elif ratio <= BELOW:
-            stance, phrase = "below", "below the public listings — confirm it's the same wine, vintage, and bottle format"
-        else:
-            stance, phrase = "in_line", "roughly in line with the public listings"
         pct = abs(round((ratio - 1) * 100))
-        delta_txt = f" (~{pct}% {'above' if ratio >= 1 else 'below'} the average estimate)" if pct >= 1 else ""
+        in_band = low is not None and high is not None and low <= quoted_price <= high
+        if high is not None and quoted_price > high:
+            stance, phrase = "above", "above every public listing we found"
+        elif low is not None and quoted_price < low:
+            stance, phrase = "below", "below every public listing we found, so confirm it is the same wine, vintage, and bottle format"
+        elif in_band:
+            if ratio >= WELL_ABOVE:
+                stance, phrase = "high_in_range", "within the public-listing range, toward the high end"
+            elif ratio <= BELOW:
+                stance, phrase = "low_in_range", "within the public-listing range, toward the low end"
+            else:
+                stance, phrase = "in_line", "right around the typical public listing"
+        else:
+            if ratio >= WELL_ABOVE:
+                stance, phrase = "well_above", "well above the typical public listing"
+            elif ratio >= ABOVE:
+                stance, phrase = "above", "above the typical public listing"
+            elif ratio <= BELOW:
+                stance, phrase = "below", "below the typical public listing"
+            else:
+                stance, phrase = "in_line", "roughly in line with the typical public listing"
+        delta_txt = f" (~{pct}% {'above' if ratio >= 1 else 'below'} the median)" if pct >= 1 else ""
         headline = f"{_fmt_usd(quoted_price)} is {phrase}{delta_txt}."
         summary = (
-            f"Public listings for {name}{label_suffix} sit {band_txt} across {listings_txt}. "
+            f"Public listings for {name}{label_suffix} sit {band_txt} across {listings_txt}{producer_note}. "
             f"Your {_fmt_usd(quoted_price)} quote is {phrase}. "
             f"Confidence: {confidence} (unvalidated estimate, never authoritative)."
         )
@@ -153,8 +172,8 @@ def build_verdict(
         stance = "context"
         headline = f"Public listings for {name}{label_suffix} sit {band_txt}."
         summary = (
-            f"Across {listings_txt}, the estimate lands {band_txt}. "
-            "Enter the price you were quoted to see exactly where it stands. "
+            f"Across {listings_txt}{producer_note}, the estimate lands {band_txt}. "
+            "Enter the price you were quoted to see where it stands. "
             f"Confidence: {confidence} (unvalidated estimate, never authoritative)."
         )
 
