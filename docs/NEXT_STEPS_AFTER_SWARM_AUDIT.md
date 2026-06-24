@@ -26,7 +26,7 @@ All local repo work has been committed where possible.
 ### 3. Portfolio Screenshots
 - After Lovable changes are live, take fresh screenshots of real results
 - Replace the old demo images in:
-  - `~/projects/justinerwin-com/public/burgreport/`
+  - `<justinerwin-com>/public/burgreport/`
   - Any copies in your Obsidian vault
 
 ### 4. Handle the justinerwin-com Branch
@@ -39,8 +39,8 @@ Options:
 - Or force the change onto main if you're okay with it
 
 ### 5. Optional Cleanup (Recommended)
-- Delete or move the 664MB legacy archive: `~/projects/burgreport-archive/`
-- Remove the stray empty git: `rm -rf ~/projects/.git`
+- Delete or move the 664MB legacy archive: `<local archive folder>`
+- Remove the stray empty git: `rm -rf <projects-dir>/.git`
 
 ---
 

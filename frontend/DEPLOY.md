@@ -5,7 +5,7 @@ Lovable setup on 2026-06-03. Server-rendered terminal UI wired to the FastAPI
 backend. Consumes the backend's honesty fields (`truth.quality`, `defense`) and
 renders the result-quality badge + "Defend this price" panel.
 
-Was previously parked under `~/projects/burgreport-archive/...`; moved here and
+Was previously parked under a local archive folder; moved here and
 verified (`npm run build` → 46 routes, typecheck clean).
 
 ## Local dev

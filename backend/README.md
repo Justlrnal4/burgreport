@@ -43,7 +43,7 @@ The backend is the source of truth for field-level data status. New normalized r
 For a free-tier search setup, use Tavily:
 
 ```bash
-cd /home/justin/projects/burgreport/backend
+cd ~/burgreport/backend
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 cp .env.example .env
@@ -52,13 +52,13 @@ cp .env.example .env
 Fill `.env` with `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`, and `TAVILY_API_KEY`. Then test one small batch:
 
 ```bash
-.venv/bin/python refresh_prices.py --provider tavily --limit 3 --sleep-seconds 2 --state-file /home/justin/.cache/burgreport/refresh-state.json
+.venv/bin/python refresh_prices.py --provider tavily --limit 3 --sleep-seconds 2 --state-file ~/.cache/burgreport/refresh-state.json
 ```
 
 Recommended cron for roughly 900 Tavily searches/month:
 
 ```cron
-15 */8 * * * cd /home/justin/projects/burgreport/backend && ./.venv/bin/python refresh_prices.py --provider tavily --limit 10 --sleep-seconds 2 --state-file /home/justin/.cache/burgreport/refresh-state.json >> /home/justin/.cache/burgreport/refresh.log 2>&1
+15 */8 * * * cd ~/burgreport/backend && ./.venv/bin/python refresh_prices.py --provider tavily --limit 10 --sleep-seconds 2 --state-file ~/.cache/burgreport/refresh-state.json >> ~/.cache/burgreport/refresh.log 2>&1
 ```
 
 The worker only upserts successful direct USD price parses. Failed searches, rate limits, or no-price snippets do not overwrite existing cached prices.

@@ -40,7 +40,7 @@ Working tree has 3 edited files (raw-URL → clean-domain merchant presentation,
 - `frontend/components/search-terminal/PriceDefensePanel.tsx` (use shared helper)
 
 ```bash
-cd /home/justin/projects/burgreport
+cd ~/burgreport
 git add frontend/lib/utils/format.ts frontend/lib/api/burgreport.ts \
         frontend/components/search-terminal/PriceDefensePanel.tsx
 git commit -m "frontend: present merchant sources as clean domains with links"
