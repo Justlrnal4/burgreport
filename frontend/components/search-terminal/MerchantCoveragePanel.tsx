@@ -14,7 +14,7 @@ export function MerchantCoveragePanel({ result }: { result: SearchResult }) {
               <div className="grid gap-2 rounded-xl border border-line bg-surface/70 p-3 sm:grid-cols-[1fr_auto] sm:items-center">
                 <div>
                   <p className="font-semibold text-cream">{merchant.merchant}</p>
-                  <p className="mt-1 font-mono text-xs text-muted">{merchant.source}</p>
+                  <p className="mt-1 font-mono text-xs text-muted-foreground">{merchant.source}</p>
                 </div>
                 <p className="font-mono text-gold">{formatUsd(merchant.priceUsd)}</p>
               </div>

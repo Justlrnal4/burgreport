@@ -102,7 +102,7 @@ export function PriceDefensePanel({ result }: { result: SearchResult }) {
           <p className="font-mono text-[10px] uppercase tracking-normal text-hint">Copy-ready — caveat travels inside the text</p>
           <CopyButtons items={copyItems} />
         </div>
-        <p className="mt-2 select-all text-sm leading-6 text-muted">{defense.summary}</p>
+        <p className="mt-2 select-all text-sm leading-6 text-muted-foreground">{defense.summary}</p>
       </div>
     </section>
   );

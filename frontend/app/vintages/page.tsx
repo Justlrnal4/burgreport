@@ -36,7 +36,7 @@ export default function VintagesPage() {
                           <span className="text-gold">{'★'.repeat(row.stars)}{'☆'.repeat(5 - row.stars)}</span>
                         </div>
                         <p className="mt-2 text-sm font-semibold text-gold">{row.label}</p>
-                        <p className="mt-2 text-sm leading-6 text-muted">{row.note}</p>
+                        <p className="mt-2 text-sm leading-6 text-muted-foreground">{row.note}</p>
                       </div>
                     ))}
                   </div>

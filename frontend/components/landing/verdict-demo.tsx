@@ -59,7 +59,7 @@ export function VerdictDemo() {
         </div>
       </div>
 
-      <p className="mt-4 text-sm leading-6 text-muted">
+      <p className="mt-4 text-sm leading-6 text-muted-foreground">
         $34,000 sits about <span className="text-cream">45% above</span> the ~$23,400 average across 11 public listings.
         Confidence: <span className="text-cream">low</span> — unvalidated estimate, never authoritative.
       </p>
@@ -73,7 +73,7 @@ export function VerdictDemo() {
               </span>
               <span className="text-sm font-semibold text-cream">{factor.label}</span>
             </div>
-            <p className="mt-1.5 text-xs leading-5 text-muted">{factor.detail}</p>
+            <p className="mt-1.5 text-xs leading-5 text-muted-foreground">{factor.detail}</p>
           </li>
         ))}
       </ul>

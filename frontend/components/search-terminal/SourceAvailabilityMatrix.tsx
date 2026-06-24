@@ -19,7 +19,7 @@ export function SourceAvailabilityMatrix({ result }: { result: SearchResult }) {
           <div key={row.label} className="grid grid-cols-[1fr_auto] gap-3 bg-surface/60 px-3 py-3">
             <div>
               <p className="font-semibold text-cream">{row.label}</p>
-              <p className="mt-1 text-xs text-muted">{row.note}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{row.note}</p>
             </div>
             <DataQualityBadge status={row.status} compact />
           </div>

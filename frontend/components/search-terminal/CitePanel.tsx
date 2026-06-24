@@ -37,7 +37,7 @@ export function CitePanel({ result }: { result: SearchResult }) {
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-normal text-hint">Cite this</p>
-          <p className="mt-1 text-sm text-muted">Quote-safe — every figure carries its status and source.</p>
+          <p className="mt-1 text-sm text-muted-foreground">Quote-safe — every figure carries its status and source.</p>
         </div>
         <CopyButtons items={[{ label: 'Copy citation', text: citation }]} />
       </div>

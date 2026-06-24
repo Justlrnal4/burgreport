@@ -30,7 +30,7 @@ export function HeroSection() {
             </h1>
           </Reveal>
           <Reveal immediate delay={130}>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-muted">
+            <p className="mt-6 max-w-xl text-lg leading-8 text-muted-foreground">
               Paste the price you were quoted and get a straight, confidence-gated read on whether it&apos;s
               defensible — across all 34 Grand Cru climats. Honest estimates, clearly labeled, never fabricated.
             </p>
@@ -43,7 +43,7 @@ export function HeroSection() {
                 <Link
                   key={`${item.name}-${item.vintage}`}
                   href={`/search?wine=${encodeURIComponent(item.name)}&vintage=${item.vintage}`}
-                  className="rounded-full border border-line bg-surface/60 px-3 py-1.5 text-sm text-muted transition hover:border-gold/60 hover:text-gold"
+                  className="rounded-full border border-line bg-surface/60 px-3 py-1.5 text-sm text-muted-foreground transition hover:border-gold/60 hover:text-gold"
                 >
                   {item.name} <span className="font-mono text-gold">{item.vintage}</span>
                 </Link>

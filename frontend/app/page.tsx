@@ -21,7 +21,7 @@ export default function HomePage() {
             <div className="rounded-[calc(1rem-1px)] bg-ink px-6 py-12 text-center md:px-12">
               <p className="eyebrow-rule font-mono text-[11px] uppercase tracking-[0.2em] text-gold">Start here</p>
               <h2 className="mx-auto mt-4 max-w-3xl text-3xl font-semibold tracking-tight text-cream md:text-5xl">Run a Grand Cru price check.</h2>
-              <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-muted">
+              <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-muted-foreground">
                 Search by climat, add a vintage, and get a confidence-gated read on whether the price is
                 defensible — estimated, reference, and unavailable fields clearly labeled, never fabricated.
               </p>

@@ -22,7 +22,7 @@ export function ClimatReferencePanel({ result }: { result: SearchResult }) {
           </div>
         ))}
       </div>
-      <p className="mt-4 text-sm leading-6 text-muted">{result.description}</p>
+      <p className="mt-4 text-sm leading-6 text-muted-foreground">{result.description}</p>
     </PanelShell>
   );
 }

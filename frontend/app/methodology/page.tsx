@@ -54,7 +54,7 @@ export default function MethodologyPage() {
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div>
                     <h2 className="text-xl font-semibold text-cream">{row.title}</h2>
-                    <p className="mt-2 text-sm leading-6 text-muted">{row.body}</p>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">{row.body}</p>
                   </div>
                   <DataQualityBadge status={row.status} />
                 </div>
@@ -65,7 +65,7 @@ export default function MethodologyPage() {
 
         <Reveal className="mt-8 block rounded-2xl border border-gold/25 bg-ink p-5">
           <h2 className="text-lg font-semibold text-cream">How this improves over time</h2>
-          <p className="mt-2 text-sm leading-6 text-muted">
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
             As coverage improves, unavailable fields can become estimated fields without changing the trust model — and if we ever add a licensed feed, that data earns the reserved &ldquo;Live&rdquo; status, walled off from the web-sourced estimates. BurgReport labels each field by source status before making any pricing claim.
           </p>
         </Reveal>

@@ -37,7 +37,7 @@ export function VerdictPanel({ result }: { result: SearchResult }) {
         </span>
       </div>
 
-      <p className="mt-3 text-sm leading-6 text-muted">{verdict.summary}</p>
+      <p className="mt-3 text-sm leading-6 text-muted-foreground">{verdict.summary}</p>
 
       {verdict.gate && (
         <div className="mt-3 rounded-xl border border-hint/30 bg-hint/5 p-3">
@@ -56,7 +56,7 @@ export function VerdictPanel({ result }: { result: SearchResult }) {
                 </span>
                 <span className="font-semibold text-cream">{factor.label}</span>
               </div>
-              <p className="mt-1.5 text-sm leading-6 text-muted">{factor.detail}</p>
+              <p className="mt-1.5 text-sm leading-6 text-muted-foreground">{factor.detail}</p>
             </li>
           ))}
         </ul>

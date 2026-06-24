@@ -27,7 +27,7 @@ export function PriceHistoryPanel({ result }: { result: SearchResult }) {
                     <td className="border-b border-line px-3 py-2 text-cream">{point.label}</td>
                     <td className="border-b border-line px-3 py-2 font-mono text-gold">{point.year}</td>
                     <td className="border-b border-line px-3 py-2 font-mono text-cream">{formatUsd(point.avgUsd)}</td>
-                    <td className="border-b border-line px-3 py-2 font-mono text-muted">{point.source}</td>
+                    <td className="border-b border-line px-3 py-2 font-mono text-muted-foreground">{point.source}</td>
                   </tr>
                 ))}
               </tbody>

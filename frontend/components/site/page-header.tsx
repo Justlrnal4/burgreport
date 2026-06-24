@@ -22,13 +22,13 @@ export function PageHeader({
             <p className="eyebrow-rule font-mono text-[11px] uppercase tracking-[0.2em] text-gold">{eyebrow}</p>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-cream md:text-5xl">{title}</h1>
           </div>
-          <div className="text-base leading-7 text-muted lg:max-w-xl">{aside}</div>
+          <div className="text-base leading-7 text-muted-foreground lg:max-w-xl">{aside}</div>
         </div>
       ) : (
         <div className="max-w-3xl">
           <p className="eyebrow-rule font-mono text-[11px] uppercase tracking-[0.2em] text-gold">{eyebrow}</p>
           <h1 className="mt-4 text-4xl font-semibold tracking-tight text-cream md:text-5xl">{title}</h1>
-          {description && <p className="mt-5 text-base leading-7 text-muted">{description}</p>}
+          {description && <p className="mt-5 text-base leading-7 text-muted-foreground">{description}</p>}
         </div>
       )}
     </Reveal>

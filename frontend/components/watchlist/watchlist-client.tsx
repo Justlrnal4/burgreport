@@ -20,13 +20,13 @@ export function WatchlistClient() {
   }, []);
 
   if (items === null) {
-    return <p className="mt-6 text-sm text-muted">Loading your saved climats…</p>;
+    return <p className="mt-6 text-sm text-muted-foreground">Loading your saved climats…</p>;
   }
 
   if (items.length === 0) {
     return (
       <div className="mt-6 rounded-2xl border border-line bg-surface p-6 text-center shadow-card">
-        <p className="text-sm leading-6 text-muted">
+        <p className="text-sm leading-6 text-muted-foreground">
           No saved climats yet. Search a Grand Cru and hit <span className="text-gold">★ Save to watchlist</span> to track it here.
         </p>
         <Link
@@ -57,7 +57,7 @@ export function WatchlistClient() {
             type="button"
             onClick={() => removeWatch(item.slug, item.vintage)}
             aria-label={`Remove ${item.name}${item.vintage ? ` ${item.vintage}` : ''} from watchlist`}
-            className="shrink-0 rounded-full border border-line bg-elevated px-3 py-1.5 font-mono text-[10px] uppercase tracking-normal text-muted transition hover:border-danger/50 hover:text-danger"
+            className="shrink-0 rounded-full border border-line bg-elevated px-3 py-1.5 font-mono text-[10px] uppercase tracking-normal text-muted-foreground transition hover:border-danger/50 hover:text-danger"
           >
             Remove
           </button>

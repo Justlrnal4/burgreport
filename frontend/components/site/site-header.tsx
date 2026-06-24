@@ -31,7 +31,7 @@ export function SiteHeader() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'font-mono text-[11px] uppercase tracking-normal text-muted transition hover:text-gold',
+                  'font-mono text-[11px] uppercase tracking-normal text-muted-foreground transition hover:text-gold',
                   active && 'text-gold'
                 )}
               >

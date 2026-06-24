@@ -15,13 +15,13 @@ export function DataQualityLegend() {
       <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
         <div>
           <p id="data-quality-legend" className="font-mono text-xs uppercase tracking-normal text-gold">Data quality legend</p>
-          <p className="mt-1 text-xs text-muted">Source status stays visible before price claims.</p>
+          <p className="mt-1 text-xs text-muted-foreground">Source status stays visible before price claims.</p>
         </div>
         <div className="flex flex-wrap gap-2">
           {ITEMS.map((item) => (
             <div key={item.status} className="inline-flex items-center gap-2 rounded-full border border-line bg-ink px-2.5 py-1.5">
               <DataQualityBadge status={item.status} compact />
-              <span className="text-xs text-muted"><span className="sr-only">{item.label}: </span>{item.text}</span>
+              <span className="text-xs text-muted-foreground"><span className="sr-only">{item.label}: </span>{item.text}</span>
             </div>
           ))}
         </div>

@@ -8,14 +8,14 @@ export function SiteFooter() {
         <div className="grid gap-8 md:grid-cols-[1.2fr_1fr_1fr]">
           <div>
             <BurgReportLogo size="lg" />
-            <p className="mt-6 max-w-md text-sm leading-6 text-muted">
+            <p className="mt-6 max-w-md text-sm leading-6 text-muted-foreground">
               Grand Cru Burgundy pricing intelligence for collectors, sommeliers, retailers, and investors.
               Estimated, reference, and unavailable fields are clearly labeled — never fabricated.
             </p>
           </div>
           <div>
             <h2 className="text-sm font-semibold text-cream">Product</h2>
-            <div className="mt-4 flex flex-col gap-3 text-sm text-muted">
+            <div className="mt-4 flex flex-col gap-3 text-sm text-muted-foreground">
               <Link className="hover:text-gold" href="/search">Search</Link>
               <Link className="hover:text-gold" href="/grand-cru">Grand Cru Guide</Link>
               <Link className="hover:text-gold" href="/vintages">Vintage Guide</Link>
@@ -25,7 +25,7 @@ export function SiteFooter() {
           </div>
           <div>
             <h2 className="text-sm font-semibold text-cream">Data note</h2>
-            <p className="mt-4 text-sm leading-6 text-muted">
+            <p className="mt-4 text-sm leading-6 text-muted-foreground">
               BurgReport separates estimated, reference, example, and unavailable data states — and reserves
               &ldquo;live&rdquo; for a future licensed feed — so pricing context stays honest.
             </p>
@@ -33,7 +33,7 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-12 flex flex-col gap-4 border-t border-line/60 pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-muted">
+          <p className="text-sm text-muted-foreground">
             © 2026 BurgReport · Built by <span className="text-cream">Justin Erwin</span>, Las Vegas
           </p>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[11px] uppercase tracking-[0.2em] text-hint">
