@@ -11,7 +11,7 @@ export function HowItWorks() {
         <div className="grid gap-7 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
           <div>
             <p className="font-mono text-xs uppercase tracking-normal text-gold">Workflow</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-normal text-cream md:text-5xl">Three steps from bottle name to pricing context.</h2>
+            <h2 className="mt-3 font-display text-3xl font-medium tracking-tight text-cream md:text-5xl">Three steps from bottle name to pricing context.</h2>
           </div>
           <div className="grid gap-3">
             {steps.map(([title, body], index) => (

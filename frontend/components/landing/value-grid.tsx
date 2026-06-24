@@ -31,14 +31,14 @@ export function ValueGrid() {
       <div className="mx-auto max-w-7xl">
         <div className="max-w-2xl">
           <p className="font-mono text-xs uppercase tracking-normal text-gold">Features</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-normal text-cream md:text-5xl">Burgundy pricing intelligence, built for trust.</h2>
+          <h2 className="mt-3 font-display text-3xl font-medium tracking-tight text-cream md:text-5xl">Burgundy pricing intelligence, built for trust.</h2>
         </div>
         <div className="mt-8 grid gap-4 md:grid-cols-4">
           {cards.map((card, index) => (
-            <article key={card.title} className={`rounded-2xl border border-line bg-surface p-5 shadow-card ${card.className}`}>
+            <article key={card.title} className={`group rounded-2xl border border-line bg-surface p-5 shadow-card transition-colors duration-300 hover:border-gold/40 ${card.className}`}>
               <div className="flex items-start justify-between gap-6">
                 <p className="font-mono text-xs uppercase tracking-normal text-gold">{card.eyebrow}</p>
-                <span className="font-mono text-sm text-hint">0{index + 1}</span>
+                <span className="font-mono text-sm text-hint transition-colors group-hover:text-gold">0{index + 1}</span>
               </div>
               <h3 className="mt-6 text-xl font-semibold text-cream">{card.title}</h3>
               <p className="mt-4 text-sm leading-6 text-muted-foreground">{card.body}</p>

@@ -60,7 +60,7 @@ export default async function GrandCruPage({ params }: GrandCruPageProps) {
           <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <p className="eyebrow-rule font-mono text-[11px] uppercase tracking-[0.2em] text-gold">Grand Cru Guide</p>
-              <h1 className="mt-4 text-5xl font-semibold tracking-tight text-cream md:text-7xl">{wine.name}</h1>
+              <h1 className="mt-4 font-display text-5xl font-medium tracking-tight text-cream md:text-7xl">{wine.name}</h1>
               <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">{wine.summary}</p>
             </div>
             <Link href={`/search?wine=${encodeURIComponent(wine.name)}`} className="inline-flex rounded-full bg-gold px-6 py-3 text-sm font-bold text-ink transition hover:bg-cream">
