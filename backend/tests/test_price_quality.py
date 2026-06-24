@@ -89,6 +89,31 @@ class SanitizePriceDataTests(unittest.TestCase):
         self.assertEqual(data["max_price_usd"], 3500)
         self.assertTrue(all("utm_source" not in s for s in data["sources"]))
 
+    def test_reversed_band_is_swapped(self):
+        # Provider returned min > max; the band must be reordered, never shown reversed.
+        data = price_quality.sanitize_price_data({
+            "avg_price_usd": 1200,
+            "min_price_usd": 1500,
+            "max_price_usd": 900,
+            "sources": ["https://www.klwines.com/a", "https://www.wine.com/b"],
+        })
+        self.assertEqual(data["min_price_usd"], 900)
+        self.assertEqual(data["max_price_usd"], 1500)
+        self.assertTrue(data["min_price_usd"] <= data["avg_price_usd"] <= data["max_price_usd"])
+
+    def test_average_outside_band_drops_band(self):
+        # The Montrachet bug: avg $1,200 sits outside its own $356-$470 range, so the
+        # spread is untrustworthy. Drop the band, keep the average as a point estimate.
+        data = price_quality.sanitize_price_data({
+            "avg_price_usd": 1200,
+            "min_price_usd": 356,
+            "max_price_usd": 470,
+            "sources": ["https://www.klwines.com/a", "https://www.wine.com/b"],
+        })
+        self.assertEqual(data["avg_price_usd"], 1200)
+        self.assertIsNone(data["min_price_usd"])
+        self.assertIsNone(data["max_price_usd"])
+
     def test_implausible_low_price_nulled(self):
         data = price_quality.sanitize_price_data({
             "avg_price_usd": 1,

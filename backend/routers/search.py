@@ -16,7 +16,7 @@ from typing import Optional
 from fastapi import APIRouter, HTTPException, Query
 
 from models.common import estimated_field, reference_field, unavailable_field
-from services import openai_search, supabase_client, airtable, data_quality, price_defense, price_quality, reference_data, verdict as verdict_service
+from services import openai_search, tavily_search, price_aggregate, supabase_client, airtable, data_quality, price_defense, price_quality, reference_data, verdict as verdict_service
 
 logger = logging.getLogger("burgreport.search")
 
@@ -51,10 +51,16 @@ async def search_wine(
         # (fabricated merchant counts, self-referential sources, fake ranges).
         price_data = price_quality.sanitize_price_data(price_data)
     else:
-        # ── 3. Fetch candidate price context via OpenAI web search ────────
-        price_data = openai_search.get_wine_price(wine_name, vintage)
+        # ── 3. Fetch live prices. Primary: aggregate real merchant offers from
+        #        Tavily (recognizes an aggregator's many listings as evidence).
+        #        Fallback: OpenAI web search when no offers are parsed. ───────
+        offers = tavily_search.get_wine_offers(wine_name, vintage)
+        if offers:
+            price_data = price_aggregate.aggregate_observations(offers, source="tavily_aggregated")
+        else:
+            price_data = openai_search.get_wine_price(wine_name, vintage)
 
-        # ── 4. Cache the result ───────────────────────────────────────────
+        # ── 4. Cache a real result ────────────────────────────────────────
         if price_data.get("avg_price_usd"):
             supabase_client.set_cached_price(grand_cru_id, vintage, price_data)
 
@@ -124,6 +130,7 @@ async def search_wine(
             "min_usd": price_data.get("min_price_usd"),
             "max_usd": price_data.get("max_price_usd"),
             "merchant_count": price_data.get("merchant_count"),
+            "offer_count": price_data.get("offer_count"),
             "critic_score": None,
             "critic_name": None,
             "drinking_window": price_data.get("drinking_window"),

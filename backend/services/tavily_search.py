@@ -149,16 +149,23 @@ def _query(wine_name: str, vintage: int | None) -> str:
     return f'"{wine_name}" {vintage_part}Grand Cru Burgundy price USD bottle'
 
 
-def get_wine_price(wine_name: str, vintage: int | None = None) -> dict:
+def _tavily_results(wine_name: str, vintage: int | None) -> tuple[list[dict], str | None]:
+    """Run the Tavily search; return (results, error_source).
+
+    error_source is None on success, else a stable code (e.g. ``tavily_timeout``)
+    the caller can surface as an unavailable state.
+    """
     api_key = os.getenv("TAVILY_API_KEY")
     if not api_key:
-        return _empty_price("tavily_missing_key", "TAVILY_API_KEY is not set")
+        return [], "tavily_missing_key"
 
     payload = {
         "query": _query(wine_name, vintage),
         "topic": "general",
-        "search_depth": os.getenv("TAVILY_SEARCH_DEPTH", "basic"),
-        "max_results": _env_int("TAVILY_MAX_RESULTS", 8),
+        # Advanced depth + more results give better merchant-offer coverage for
+        # sparse fine-Burgundy queries; both stay env-overridable.
+        "search_depth": os.getenv("TAVILY_SEARCH_DEPTH", "advanced"),
+        "max_results": _env_int("TAVILY_MAX_RESULTS", 12),
         "include_answer": False,
         "include_raw_content": False,
         "include_domains": _include_domains(),
@@ -172,22 +179,57 @@ def get_wine_price(wine_name: str, vintage: int | None = None) -> dict:
             timeout=_env_float("TAVILY_TIMEOUT_SECONDS", 30.0),
         )
         if response.status_code == 401:
-            return _empty_price("tavily_auth_error", "Tavily authentication failed")
+            return [], "tavily_auth_error"
         if response.status_code == 429:
-            return _empty_price("tavily_rate_limit", "Tavily rate limit reached")
+            return [], "tavily_rate_limit"
         response.raise_for_status()
-        data = response.json()
+        return (response.json().get("results") or []), None
     except httpx.TimeoutException as exc:
         logger.error("Tavily timeout for %s %s: %s", wine_name, vintage, exc)
-        return _empty_price("tavily_timeout")
+        return [], "tavily_timeout"
     except httpx.HTTPError as exc:
         logger.error("Tavily request error for %s %s: %s", wine_name, vintage, exc)
-        return _empty_price("tavily_error")
+        return [], "tavily_error"
     except ValueError as exc:
         logger.error("Tavily JSON parse error for %s %s: %s", wine_name, vintage, exc)
-        return _empty_price("tavily_parse_error")
+        return [], "tavily_parse_error"
 
-    prices, sources, merchant_count = _prices_from_results(data.get("results") or [], wine_name, vintage)
+
+def get_wine_offers(wine_name: str, vintage: int | None = None) -> list[dict]:
+    """Return individual price offers ``[{"price", "url"}]`` parsed from trusted
+    merchant snippets, for the live aggregation path. Empty list when nothing
+    usable is found — the caller decides how to fall back."""
+    results, error = _tavily_results(wine_name, vintage)
+    if error:
+        return []
+    offers: list[dict] = []
+    for result in results:
+        url = str(result.get("url") or "")
+        title = str(result.get("title") or "")
+        content = str(result.get("content") or "")
+        text = " ".join([title, content, url])
+        if vintage and str(vintage) not in text:
+            continue
+        if not _contains_wine_token(text, wine_name):
+            continue
+        for price in _extract_usd_prices(text):
+            offers.append({"price": price, "url": url})
+    return offers
+
+
+def get_wine_price(wine_name: str, vintage: int | None = None) -> dict:
+    """Summary price dict (mean band). Retained for the scheduled refresh worker;
+    the live search path uses ``get_wine_offers`` + ``price_aggregate`` instead."""
+    results, error = _tavily_results(wine_name, vintage)
+    if error:
+        notes = {
+            "tavily_missing_key": "TAVILY_API_KEY is not set",
+            "tavily_auth_error": "Tavily authentication failed",
+            "tavily_rate_limit": "Tavily rate limit reached",
+        }.get(error, "Price data temporarily unavailable")
+        return _empty_price(error, notes)
+
+    prices, sources, merchant_count = _prices_from_results(results, wine_name, vintage)
     if not prices:
         return _empty_price(
             "tavily_no_price",

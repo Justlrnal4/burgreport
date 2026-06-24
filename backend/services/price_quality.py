@@ -122,4 +122,19 @@ def sanitize_price_data(data: dict) -> dict:
         data["min_price_usd"] = None
         data["max_price_usd"] = None
 
+    # 5. Aggregate coherence. Provider-summarized bounds (especially the LLM
+    #    path, which fills min/max/avg as free-form fields) can come back
+    #    reversed, or with an average that sits outside its own band. Never emit
+    #    an incoherent range: swap reversed bounds, and if the average falls
+    #    outside [low, high] the spread cannot be trusted — drop the band and
+    #    keep only the average as an honest point estimate.
+    low = data.get("min_price_usd")
+    high = data.get("max_price_usd")
+    if low is not None and high is not None and low > high:
+        low, high = high, low
+        data["min_price_usd"], data["max_price_usd"] = low, high
+    if avg is not None and low is not None and high is not None and not (low <= avg <= high):
+        data["min_price_usd"] = None
+        data["max_price_usd"] = None
+
     return data
