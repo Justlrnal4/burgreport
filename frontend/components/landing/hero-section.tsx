@@ -25,8 +25,8 @@ export function HeroSection() {
             </p>
           </Reveal>
           <Reveal immediate delay={70}>
-            <h1 className="mt-6 text-balance font-display text-[2.6rem] font-medium leading-[1.06] tracking-tight text-cream sm:text-[3.4rem] lg:text-[4rem]">
-              Know what every <span className="text-gold">Grand Cru</span> is&nbsp;worth.
+            <h1 className="mt-6 text-balance font-display text-[2.5rem] font-medium leading-[1.08] tracking-tight text-cream sm:text-[3.3rem] lg:text-[2.95rem] xl:text-[3.6rem] 2xl:text-[4rem]">
+              Know what every <span className="whitespace-nowrap text-gold">Grand&nbsp;Cru</span> is&nbsp;worth.
             </h1>
           </Reveal>
           <Reveal immediate delay={130}>
