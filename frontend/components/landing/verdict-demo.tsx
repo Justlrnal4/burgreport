@@ -6,8 +6,8 @@ import Link from 'next/link';
 //
 // Band scale: $16k–$36k. low 19.2 → 16% · avg 23.4 → 37% · high 28.5 → 62.5% · quote 34 → 90%.
 const FACTORS = [
-  { basis: 'Reference', label: 'Scarcity', detail: 'Monopole — 1.81 ha, the smallest Grand Cru of the Côte de Nuits.' },
-  { basis: 'Reference', label: 'Vintage 2018', detail: 'Rated Exceptional (5/5) — rich, opulent, age-worthy.' }
+  { label: 'Scarcity', detail: 'Monopole · 1.81 ha' },
+  { label: 'Vintage 2018', detail: 'Exceptional · 5/5' }
 ];
 
 export function VerdictDemo() {
@@ -32,24 +32,20 @@ export function VerdictDemo() {
         </span>
       </div>
 
-      <div className="mt-5 flex items-baseline justify-between">
+      <div className="mt-4 flex items-baseline justify-between">
         <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-hint">You were quoted</span>
         <span className="font-mono text-[1.7rem] font-semibold leading-none text-cream sm:text-3xl">$34,000</span>
       </div>
 
       {/* where-it-sits band */}
-      <div className="mt-5">
-        <div className="relative h-8">
-          {/* quote marker label */}
+      <div className="mt-4">
+        <div className="relative h-7">
           <span className="absolute top-0 -translate-x-1/2 font-mono text-[10px] text-gold" style={{ left: '90%' }}>
             quote
           </span>
-          <div className="absolute inset-x-0 bottom-1.5 h-1.5 rounded-full bg-line">
-            {/* public-listings range */}
+          <div className="absolute inset-x-0 bottom-1 h-1.5 rounded-full bg-line">
             <span className="absolute bottom-0 top-0 rounded-full bg-gradient-to-r from-wine/70 to-gold/80" style={{ left: '16%', width: '46.5%' }} />
-            {/* average tick */}
             <span className="absolute -top-1 h-3.5 w-px bg-cream/80" style={{ left: '37%' }} />
-            {/* quoted-price marker, sitting clearly to the right of the range */}
             <span className="absolute -top-1.5 h-[18px] w-[2px] rounded bg-gold shadow-[0_0_8px_rgba(201,152,106,0.7)]" style={{ left: '90%' }} />
           </div>
         </div>
@@ -60,26 +56,22 @@ export function VerdictDemo() {
       </div>
 
       <p className="mt-4 text-sm leading-6 text-muted-foreground">
-        $34,000 sits about <span className="text-cream">45% above</span> the ~$23,400 average across 11 public listings.
-        Confidence: <span className="text-cream">low</span> — unvalidated estimate, never authoritative.
+        $34,000 sits about <span className="text-cream">45% above</span> the ~$23,400 average across 11 public listings —
+        confidence <span className="text-cream">low</span>, unvalidated estimate, never authoritative.
       </p>
 
-      <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+      {/* compact supporting factors (kept short so the card fits the fold) */}
+      <div className="mt-4 grid grid-cols-2 gap-4 border-t border-line/70 pt-4">
         {FACTORS.map((factor) => (
-          <li key={factor.label} className="rounded-xl border border-line bg-surface/70 p-3">
-            <div className="flex items-center gap-2">
-              <span className="rounded-full border border-line bg-elevated px-2 py-0.5 font-mono text-[9px] uppercase tracking-normal text-hint">
-                {factor.basis}
-              </span>
-              <span className="text-sm font-semibold text-cream">{factor.label}</span>
-            </div>
-            <p className="mt-1.5 text-xs leading-5 text-muted-foreground">{factor.detail}</p>
-          </li>
+          <div key={factor.label}>
+            <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-hint">{factor.label}</p>
+            <p className="mt-1 text-sm font-medium text-cream">{factor.detail}</p>
+          </div>
         ))}
-      </ul>
+      </div>
 
-      <div className="mt-4 flex items-center justify-between gap-3 border-t border-line/70 pt-3">
-        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-hint">Sample read · live-searched in real time</span>
+      <div className="mt-4 flex items-center justify-between gap-3">
+        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-hint">Sample read · live in real time</span>
         <span className="font-mono text-[11px] text-gold transition-transform duration-300 group-hover:translate-x-0.5">Run it live →</span>
       </div>
     </Link>

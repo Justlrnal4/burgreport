@@ -15,8 +15,8 @@ const trustMarks = ['34 Grand Cru climats', 'Web-sourced estimates', 'Confidence
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden px-4 pb-16 pt-14 sm:px-6 lg:px-8 lg:pb-24 lg:pt-24">
-      <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1.04fr_0.96fr] lg:gap-14">
+    <section className="relative overflow-hidden px-4 pb-12 pt-6 sm:px-6 lg:px-8 lg:pb-16 lg:pt-10">
+      <div className="mx-auto grid max-w-6xl items-start gap-10 lg:grid-cols-[1.04fr_0.96fr] lg:gap-12">
         {/* Left — the pitch and the search */}
         <div>
           <Reveal immediate>
